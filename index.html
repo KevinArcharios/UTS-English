@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F6FB; --bg2:#EAF1FB;
+  --card:#FFFFFF;
+  --primary:#AEC9F2; --primary-dark:#6E95D6; --primary-text:#2D4568;
+  --mint:#BFE8D4; --peach:#FFD9BB; --lavender:#DED2F9; --pink:#FBD0DE;
+  --text:#303647; --text-soft:#6B7280;
+  --border:#E3E9F3;
+  --correct:#8FD6A8; --correct-bg:#E6F7EC;
+  --wrong:#F2A0A0; --wrong-bg:#FDEBEB;
+  --shadow: 0 8px 24px -12px rgba(50,70,120,0.18);
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1B2030; --bg2:#20273A; --card:#262D42;
+    --primary:#7FA0DE; --primary-dark:#9DBBF0; --primary-text:#DCE7FB;
+    --mint:#7FC9A3; --peach:#E8B98C; --lavender:#B6A4E8; --pink:#E39CB4;
+    --text:#E7EAF3; --text-soft:#A4ACC4; --border:#363F58;
+    --correct:#5FBE86; --correct-bg:#1E3327;
+    --wrong:#E07B7B; --wrong-bg:#3A2323;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1B2030; --bg2:#20273A; --card:#262D42;
+  --primary:#7FA0DE; --primary-dark:#9DBBF0; --primary-text:#DCE7FB;
+  --mint:#7FC9A3; --peach:#E8B98C; --lavender:#B6A4E8; --pink:#E39CB4;
+  --text:#E7EAF3; --text-soft:#A4ACC4; --border:#363F58;
+  --correct:#5FBE86; --correct-bg:#1E3327;
+  --wrong:#E07B7B; --wrong-bg:#3A2323;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; font-family:'Nunito',system-ui,sans-serif;
+  background:linear-gradient(160deg,var(--bg),var(--bg2));
+  color:var(--text); min-height:100%;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.brand{font-family:'Quicksand',system-ui,sans-serif;}
+.wrap{max-width:760px; margin:0 auto; padding:28px 18px 60px;}
+.topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:10px;}
+.brand{font-weight:700; font-size:1.25rem; color:var(--primary-text); display:flex; align-items:center; gap:8px;}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--primary);}
+.pill{font-size:.78rem; padding:5px 12px; border-radius:999px; background:var(--card); border:1px solid var(--border); color:var(--text-soft); font-weight:600;}
+
+/* START SCREEN */
+.start-card{background:var(--card); border-radius:26px; padding:36px 28px; box-shadow:var(--shadow); border:1px solid var(--border);}
+.start-card h1{font-size:1.6rem; margin:0 0 6px; color:var(--text);}
+.start-card p{color:var(--text-soft); margin:0 0 26px; line-height:1.55;}
+.part-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media (max-width:520px){.part-grid{grid-template-columns:1fr;}}
+.part-btn{
+  border:2px solid var(--border); background:var(--bg); border-radius:18px; padding:20px 16px;
+  cursor:pointer; text-align:left; transition:.15s; font-family:inherit;
+}
+.part-btn:hover{border-color:var(--primary); transform:translateY(-2px);}
+.part-btn .num{display:inline-block; font-family:'Quicksand'; font-weight:700; font-size:.75rem; color:var(--primary-dark); background:var(--primary); background:color-mix(in srgb, var(--primary) 35%, transparent); padding:3px 10px; border-radius:999px; margin-bottom:10px;}
+.part-btn h3{margin:0 0 4px; font-size:1.05rem;}
+.part-btn span{color:var(--text-soft); font-size:.85rem;}
+
+/* QUIZ SCREEN */
+.quiz-top{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+.progress-wrap{flex:1; min-width:140px;}
+.progress-bar{height:8px; border-radius:999px; background:var(--border); overflow:hidden;}
+.progress-fill{height:100%; background:var(--primary); border-radius:999px; transition:width .25s;}
+.progress-label{font-size:.78rem; color:var(--text-soft); margin-top:5px; font-weight:600;}
+.btn-ghost{
+  background:var(--card); border:1px solid var(--border); color:var(--text);
+  padding:9px 14px; border-radius:12px; font-weight:700; font-size:.85rem; cursor:pointer; font-family:inherit;
+}
+.btn-ghost:hover{border-color:var(--primary);}
+.q-card{background:var(--card); border-radius:24px; padding:28px 24px; box-shadow:var(--shadow); border:1px solid var(--border);}
+.q-tag{font-size:.72rem; font-weight:700; color:var(--primary-dark); background:color-mix(in srgb, var(--primary) 30%, transparent); display:inline-block; padding:4px 10px; border-radius:999px; margin-bottom:12px;}
+.q-text{font-size:1.12rem; font-weight:700; line-height:1.5; margin:0 0 20px; font-family:'Quicksand';}
+.options{display:flex; flex-direction:column; gap:10px;}
+.opt{
+  display:flex; align-items:flex-start; gap:12px; text-align:left;
+  border:2px solid var(--border); background:var(--bg); border-radius:16px;
+  padding:13px 15px; cursor:pointer; font-family:inherit; font-size:.97rem; color:var(--text);
+  transition:.12s;
+}
+.opt:hover:not(.locked){border-color:var(--primary); background:color-mix(in srgb, var(--primary) 12%, var(--bg));}
+.opt .letter{
+  flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--card); border:2px solid var(--border);
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; font-family:'Quicksand';
+}
+.opt.correct{border-color:var(--correct); background:var(--correct-bg);}
+.opt.correct .letter{background:var(--correct); border-color:var(--correct); color:#fff;}
+.opt.wrong{border-color:var(--wrong); background:var(--wrong-bg);}
+.opt.wrong .letter{background:var(--wrong); border-color:var(--wrong); color:#fff;}
+.opt.locked{cursor:default;}
+.opt.dim{opacity:.55;}
+
+.explain{margin-top:18px; padding:16px 18px; border-radius:16px; font-size:.92rem; line-height:1.6; display:none;}
+.explain.show{display:block; animation:fade .25s ease;}
+.explain.ok{background:var(--correct-bg); border:1px solid var(--correct);}
+.explain.bad{background:var(--wrong-bg); border:1px solid var(--wrong);}
+.explain b{font-family:'Quicksand';}
+@keyframes fade{from{opacity:0; transform:translateY(-4px);} to{opacity:1; transform:translateY(0);}}
+
+.nav-row{display:flex; gap:10px; margin-top:20px;}
+.btn{
+  flex:1; padding:13px; border-radius:14px; border:none; font-weight:700; font-family:'Quicksand';
+  cursor:pointer; font-size:.95rem; transition:.15s;
+}
+.btn-prev{background:var(--card); border:1px solid var(--border); color:var(--text);}
+.btn-prev:hover{border-color:var(--primary);}
+.btn-next{background:var(--primary); color:var(--primary-text);}
+.btn-next:hover{background:var(--primary-dark); color:#fff;}
+.btn:disabled{opacity:.45; cursor:not-allowed;}
+.btn-finish{background:var(--mint); color:#1d4a34;}
+.btn-finish:hover{filter:brightness(.95);}
+
+/* MODAL */
+.modal-bg{position:fixed; inset:0; background:rgba(20,25,40,.45); display:none; align-items:center; justify-content:center; padding:20px; z-index:50;}
+.modal-bg.show{display:flex;}
+.modal{background:var(--card); border-radius:22px; padding:24px; max-width:420px; width:100%; max-height:80vh; overflow:auto; box-shadow:var(--shadow);}
+.modal h3{margin:0 0 4px;}
+.modal .sub{color:var(--text-soft); font-size:.82rem; margin:0 0 16px;}
+.num-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:8px;}
+.num-btn{
+  aspect-ratio:1; border-radius:10px; border:2px solid var(--border); background:var(--bg);
+  font-family:'Quicksand'; font-weight:700; font-size:.85rem; cursor:pointer; color:var(--text);
+}
+.num-btn.cur{border-color:var(--primary-dark); box-shadow:0 0 0 2px color-mix(in srgb, var(--primary) 40%, transparent);}
+.num-btn.ans-ok{background:var(--correct); color:#fff; border-color:var(--correct);}
+.num-btn.ans-bad{background:var(--wrong); color:#fff; border-color:var(--wrong);}
+.modal-close{margin-top:16px; width:100%;}
+.legend{display:flex; gap:14px; margin-top:14px; flex-wrap:wrap; font-size:.75rem; color:var(--text-soft);}
+.legend span{display:inline-flex; align-items:center; gap:5px;}
+.legend i{width:10px; height:10px; border-radius:3px; display:inline-block;}
+
+/* RESULT */
+.score-card{background:var(--card); border-radius:26px; padding:30px 26px; box-shadow:var(--shadow); border:1px solid var(--border); text-align:center;}
+.score-ring{width:140px; height:140px; margin:0 auto 18px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:conic-gradient(var(--primary) calc(var(--pct)*1%), var(--border) 0);}
+.score-ring .inner{width:112px; height:112px; border-radius:50%; background:var(--card); display:flex; flex-direction:column; align-items:center; justify-content:center;}
+.score-ring .inner b{font-size:1.7rem; font-family:'Quicksand';}
+.score-ring .inner span{font-size:.72rem; color:var(--text-soft);}
+.score-stats{display:flex; gap:12px; justify-content:center; margin:18px 0 6px; flex-wrap:wrap;}
+.stat{background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:10px 18px; min-width:90px;}
+.stat b{display:block; font-family:'Quicksand'; font-size:1.2rem;}
+.stat span{font-size:.75rem; color:var(--text-soft);}
+.review{margin-top:26px; text-align:left;}
+.review h3{margin-bottom:14px;}
+.review-item{border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; background:var(--bg);}
+.review-item .qn{font-weight:700; font-family:'Quicksand'; margin-bottom:8px;}
+.review-item .ans-line{font-size:.88rem; margin:3px 0;}
+.review-item .ans-line.bad{color:var(--wrong);}
+.review-item .ans-line.ok{color:var(--correct);}
+.review-item .ex{font-size:.85rem; color:var(--text-soft); margin-top:8px; line-height:1.55;}
+.restart-row{display:flex; gap:10px; margin-top:24px;}
+
+.hidden{display:none !important;}
+.footer-note{text-align:center; font-size:.78rem; color:var(--text-soft); margin-top:30px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span>UM2315 Grammar Quiz</div>
+    <span class="pill" id="statusPill">Structure &amp; Written Expression</span>
+  </div>
+
+  <!-- START SCREEN -->
+  <div id="screenStart">
+    <div class="start-card">
+      <h1>Siap uji pemahamanmu? 🎯</h1>
+      <p>Soal diacak setiap kali kuis dimulai, lengkap dengan pembahasan di tiap jawaban. Pilih bagian materi yang mau kamu kerjakan dulu.</p>
+      <div class="part-grid">
+        <button class="part-btn" onclick="startQuiz(1)">
+          <span class="num">PART 1 · 50 Soal</span>
+          <h3 style="color: white;">Clauses &amp; Reduced Clauses</h3>
+          <span>Kalimat satu klausa, kalimat multi-klausa, noun/adjective clause, hingga reduced clause.</span>
+        </button>
+        <button class="part-btn" onclick="startQuiz(2)">
+          <span class="num">PART 2 · 50 Soal</span>
+          <h3 style="color: white;">Parallel &amp; Comparative</h3>
+          <span>Parallel structure, comparative, superlative, dan double comparative.</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="screenQuiz" class="hidden">
+    <div class="quiz-top">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-label" id="progressLabel">Soal 1 / 50</div>
+      </div>
+      <button class="btn-ghost" onclick="openModal()">📋 Daftar Soal</button>
+    </div>
+    <div class="q-card">
+      <div class="q-tag" id="qTag">Topik</div>
+      <p class="q-text" id="qText">...</p>
+      <div class="options" id="optionsWrap"></div>
+      <div class="explain" id="explainBox"></div>
+      <div class="nav-row">
+        <button class="btn btn-prev" id="btnPrev" onclick="goPrev()">← Previous</button>
+        <button class="btn btn-next" id="btnNext" onclick="goNext()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="screenResult" class="hidden"></div>
+
+  <div class="footer-note">Dibuat dari materi UM2315 – English for Informatics</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3>Daftar Soal</h3>
+    <p class="sub">Klik nomor untuk langsung loncat ke soal tersebut.</p>
+    <div class="num-grid" id="numGrid"></div>
+    <div class="legend">
+      <span><i style="background:var(--mint)"></i>Benar</span>
+      <span><i style="background:var(--wrong)"></i>Salah</span>
+      <span><i style="background:var(--border)"></i>Belum dijawab</span>
+    </div>
+    <button class="btn btn-ghost modal-close" onclick="closeModal()">Tutup</button>
+  </div>
+</div>
+
+<script>
+/* ================= QUESTION BANK ================= */
+/* t: topik label, q: pertanyaan, o: 5 opsi, c: index jawaban benar (0-4), e: penjelasan */
+const BANK1 = [
+  {
+    t: "One Clause",
+    q: "Pilih kalimat yang paling tepat secara struktur gramatikal.",
+    o: [
+      "The engineer design by the new team was praised.",
+      "The engineer designing by the new team was praised.",
+      "The design engineered by the new team was praised.",
+      "The design engineering by the new team was praised.",
+      "The design, engineer by the new team, was praised.",
+    ],
+    c: 2,
+    e: "Pola 'verb menjadi adjective' menuntut past participle (V3) bila maknanya pasif — subjek 'design' DI-rancang (dikerjakan) oleh tim, sehingga tepat memakai 'engineered' (V3) setelah noun 'design'. Opsi A salah karena 'design' adalah bentuk dasar, bukan V3, sehingga tidak bisa langsung menempel pada noun sebagai modifier pasif. Opsi B memakai 'designing' (V-ing/aktif) padahal makna kalimat pasif, ini bertentangan dengan aturan V-ing=aktif/V3=pasif. Opsi D mengulang kesalahan yang sama dengan bentuk -ing pada frasa 'design engineering'. Opsi E menambahkan koma yang justru mengubah frasa menjadi appositive yang tidak gramatikal karena 'engineer' tanpa -ed bukan participle yang valid di posisi itu."
+  },
+  {
+    t: "One Clause",
+    q: "_____, is well known among the freshmen for her patience.",
+    o: [
+      "Mrs. Dinda, the head lecturer of the faculty",
+      "Mrs. Dinda the head lecturer of the faculty",
+      "Mrs. Dinda is the head lecturer of the faculty",
+      "Mrs. Dinda, who the head lecturer of the faculty",
+      "The head lecturer, of the faculty, Mrs. Dinda",
+    ],
+    c: 0,
+    e: "Ini adalah pola appositive: noun kedua ('the head lecturer of the faculty') diselipkan untuk menjelaskan noun pertama ('Mrs. Dinda'), dan harus diapit tanda koma di kedua sisi tanpa verba tambahan karena verba utama kalimat sudah ada di belakang ('is well known'). Opsi B salah karena tidak ada koma pemisah sama sekali, sehingga dua noun phrase terasa menempel tanpa jeda yang jelas. Opsi C salah karena menambahkan verba 'is' kedua, membuat kalimat punya dua verba utama tanpa connector sehingga menjadi run-on sentence. Opsi D salah karena menambahkan 'who' yang justru mengubahnya menjadi adjective clause yang butuh verba sendiri ('who is the head lecturer'), bukan appositive murni. Opsi E salah karena urutan dan tanda koma yang berantakan membuat struktur appositive tidak jelas mana yang diterangkan."
+  },
+  {
+    t: "Connectors",
+    q: "Manakah kalimat yang menerapkan aturan tanda koma pada adverb connector dengan benar?",
+    o: [
+      "Because the server crashed the whole team had to restart their work.",
+      "Because the server crashed, the whole team had to restart their work.",
+      "The whole team had to restart their work, because the server crashed.",
+      "The whole team, had to restart their work because the server crashed.",
+      "The whole team had to restart, their work because the server crashed.",
+    ],
+    c: 1,
+    e: "Aturan yang diajarkan: jika connector/adverb clause (seperti 'because') diletakkan di AWAL kalimat, maka wajib diberi koma sebelum klausa utama dimulai — persis seperti 'Because it was raining, Teresa went inside.' Opsi B sudah tepat menempatkan koma setelah klausa 'because'. Opsi A salah karena tidak ada koma sama sekali padahal 'because' ada di awal kalimat. Opsi C justru menempatkan 'because' di tengah kalimat, dan menurut aturan materi, jika connector di tengah maka TIDAK perlu koma, sehingga koma sebelum 'because' pada opsi C sebenarnya berlebihan dan salah. Opsi D dan E menaruh koma di posisi acak yang tidak sesuai aturan manapun dan justru memutus unit subjek-verba secara tidak logis."
+  },
+  {
+    t: "Connectors",
+    q: "The internship was unpaid, _____ most students still applied for it.",
+    o: [
+      "so",
+      "yet",
+      "for",
+      "because",
+      "although",
+    ],
+    c: 1,
+    e: "Konjungsi koordinator yang tepat di sini harus menunjukkan hubungan kontras/pertentangan: meski magang tidak dibayar, mahasiswa tetap mendaftar. 'Yet' adalah coordinator connector yang secara spesifik berarti 'namun/meski demikian', pas untuk kontras ini, sejalan dengan contoh materi 'Tom is tired, yet he is not going to sleep.' 'So' salah karena menunjukkan akibat/hasil logis, bukan kontras — 'so' akan pas jika kalimatnya adalah hasil wajar, bukan hal yang berlawanan. 'For' berarti 'karena' (menjelaskan alasan), bukan kontras. 'Because' juga berarti sebab, dan secara gramatikal tidak bisa langsung didahului koma+klausa lengkap dalam posisi koordinator seperti ini. 'Although' sebenarnya cocok secara makna, tapi secara struktur 'although' adalah adverb/subordinator yang seharusnya mengawali klausa (Although X, Y) bukan diletakkan setelah koma di tengah dua klausa independen seperti pola koordinator di soal ini."
+  },
+  {
+    t: "Noun Clause",
+    q: "The supervisor still doesn't know _____ the final report.",
+    o: [
+      "who submitted",
+      "who submit",
+      "who submitting",
+      "who to submitted",
+      "who did submitted",
+    ],
+    c: 0,
+    e: "Ini adalah noun clause sebagai objek verba ('doesn't know' + noun clause). Polanya adalah connector + Subject + Verb, dan di sini 'who' bertindak sekaligus sebagai subjek klausa, sehingga langsung diikuti verba berbentuk past tense biasa ('submitted') karena konteksnya laporan yang sudah diserahkan. Opsi B salah karena 'submit' bentuk dasar tidak sesuai dengan konteks waktu lampau yang tersirat dan tidak cocok setelah subjek tunggal 'who' dalam noun clause naratif seperti ini. Opsi C salah karena '-ing' tidak bisa berfungsi sebagai verba utama klausa tanpa auxiliary ('is submitting' baru benar, bukan 'submitting' saja). Opsi D salah karena menggabungkan 'to' dengan bentuk past tense ('to submitted') yang tidak gramatikal dalam struktur apa pun. Opsi E salah karena setelah 'who' sebagai subjek, kita tidak perlu auxiliary 'did' ditambah lagi verb berbentuk past ('did submitted') — itu duplikasi penanda waktu lampau yang keliru."
+  },
+  {
+    t: "Noun Clause",
+    q: "_____ is still being discussed by the examination committee.",
+    o: [
+      "When will the retake exam be held",
+      "When the retake exam will be held",
+      "When will be the retake exam held",
+      "The retake exam when will be held",
+      "When held will be the retake exam",
+    ],
+    c: 1,
+    e: "Noun clause sebagai SUBJEK kalimat mengikuti pola pernyataan biasa: connector + Subject + Verb (bukan pola tanya dengan auxiliary di depan subjek), sama seperti contoh materi 'When he will arrive is not important.' Opsi B menjaga urutan 'the retake exam' (subjek) sebelum 'will be held' (verba), sehingga benar. Opsi A salah karena memakai struktur tanya langsung (auxiliary 'will' sebelum subjek 'the retake exam'), padahal dalam noun clause urutan tanya harus diubah menjadi pernyataan. Opsi C mengulangi kesalahan yang sama dengan auxiliary di depan subjek. Opsi D dan E mengacak urutan kata secara tidak logis sehingga tidak membentuk frasa yang bermakna maupun gramatikal."
+  },
+  {
+    t: "Adjective Clause",
+    q: "Students _____ did not submit their assignments will receive a penalty.",
+    o: [
+      "whom",
+      "which",
+      "who",
+      "whose",
+      "whom they",
+    ],
+    c: 2,
+    e: "Adjective clause di sini berfungsi sebagai SUBJEK dari klausa turunannya sendiri ('___ did not submit'), karena setelah connector langsung muncul verba tanpa subjek lain di antaranya. Untuk antecedent orang ('students') yang berperan sebagai subjek klausa, connector yang tepat adalah 'who'. 'Whom' salah karena 'whom' dipakai untuk objek, bukan subjek klausa — kalau dipakai di sini akan terasa ganjil karena langsung diikuti verba tanpa subjek lain. 'Which' salah karena dipakai untuk benda, bukan orang. 'Whose' salah karena menunjukkan kepemilikan, bukan subjek pelaku tindakan 'tidak mengumpulkan'. 'Whom they' salah karena menambahkan subjek ganda ('they') setelah connector, padahal 'who' sendiri sudah berfungsi sebagai subjek, sehingga strukturnya jadi berlebihan dan tidak gramatikal."
+  },
+  {
+    t: "Reduced Clause",
+    q: "The proposal, _____ by the review board last week, needs major revision.",
+    o: [
+      "reject",
+      "rejecting",
+      "rejected",
+      "which reject",
+      "that is rejecting",
+    ],
+    c: 2,
+    e: "Ini adalah reduced adjective clause dalam bentuk appositif (diapit koma). Kalimat asalnya 'The proposal, which was rejected by the review board..., needs...' — karena verbanya pasif (proposal DI-tolak), connector + be-verb dihilangkan dan diganti past participle (V3) 'rejected', sesuai aturan 'V3 = Passive Sentence' pada materi. 'Reject' salah karena bentuk dasar tidak bisa berfungsi sebagai modifier pasif tanpa -ed. 'Rejecting' salah karena -ing menandakan makna aktif (proposal yang menolak, bukan ditolak), bertentangan dengan logika kalimat. 'Which reject' salah karena jika connector dipertahankan, verbanya harus sesuai subjek tunggal dan bentuk pasif lengkap ('which was rejected'), bukan 'which reject' yang tidak lengkap dan salah subject-verb agreement. 'That is rejecting' salah karena makna aktifnya tidak sesuai — ini juga bukan bentuk reduced clause (connector 'that' dipertahankan penuh), sehingga tidak menjawab maksud reduksi yang diminta konteks."
+  },
+  {
+    t: "Reduced Clause",
+    q: "_____ for the scholarship, Rian prepared every required document carefully.",
+    o: [
+      "Apply",
+      "Applying",
+      "Applied",
+      "He applying",
+      "While he apply",
+    ],
+    c: 1,
+    e: "Ini reduced adverb clause dengan verba biasa (bukan be-verb). Kalimat asalnya 'While he applied for the scholarship, Rian prepared...' — karena subjek klausa adverb sama dengan subjek klausa utama (Rian/he), Subject+Verb dihilangkan dan diganti V-ing, menghasilkan 'Applying for the scholarship, Rian prepared...', persis seperti pola 'When you give your speech, you should...' menjadi 'When giving your speech...'. 'Apply' salah karena bentuk dasar tanpa -ing tidak bisa berdiri sebagai pembuka frasa reduced clause. 'Applied' salah karena V3 di awal frasa seperti ini akan terbaca seolah pasif ('having been applied'), padahal makna aslinya aktif (Rian yang mendaftar). 'He applying' salah karena subjek 'he' seharusnya justru dihilangkan dalam proses reduksi, bukan dipertahankan berdampingan dengan V-ing. 'While he apply' salah karena ini sama sekali belum tereduksi (connector+subjek+verba masih utuh) dan subject-verb agreement-nya juga salah ('he apply' seharusnya 'he applies')."
+  },
+  {
+    t: "Reduced Clause",
+    q: "_____ rather nervous, the presenter still managed to finish her slides on time.",
+    o: [
+      "Although is",
+      "Although",
+      "Although she is",
+      "Although being",
+      "Despite",
+    ],
+    c: 1,
+    e: "Ini reduced adverb clause dengan be-verb. Kalimat asalnya 'Although she was rather nervous, the presenter still managed...' — karena ada be-verb, aturannya adalah menghilangkan SUBJECT + VERB (be-verb) sepenuhnya sambil tetap mempertahankan connector 'although', menghasilkan 'Although rather nervous, ...', identik dengan contoh materi 'Although he is rather unwell, the speaker will take part...' menjadi 'Although rather unwell, the speaker will...'. 'Although is' salah karena menyisakan be-verb 'is' tanpa subjek, yang justru melanggar aturan bahwa be-verb ikut dihilangkan bersama subjek. 'Although she is' salah karena belum direduksi sama sekali. 'Although being' salah karena pola reduksi be-verb bukan menggantinya dengan 'being', melainkan menghilangkannya total — 'being' dipakai pada pola reduksi berbeda. 'Despite' salah karena meskipun maknanya mirip, 'despite' secara gramatikal diikuti oleh noun phrase/gerund, bukan adjective phrase seperti 'rather nervous' dalam pola reduced clause yang diajarkan di sini."
+  },
+  {
+    t: "One Clause",
+    q: "Manakah kalimat berikut yang strukturnya SALAH?",
+    o: [
+      "The laptop purchased last semester was already outdated.",
+      "The student standing near the entrance is my labmate.",
+      "The data collected by the survey team seems inconsistent.",
+      "The report writing by the committee was very detailed.",
+      "The professor teaching this course is widely respected.",
+    ],
+    c: 3,
+    e: "Kalimat D salah karena menggunakan V-ing ('writing') pada frasa yang seharusnya bermakna pasif — laporan itu DITULIS oleh komite, bukan laporan yang 'sedang menulis'. Aturan materi menyebutkan 'Present Participle (V-ing) comes before verb' untuk makna aktif dan 'Past Participle (V3) comes before verb' untuk makna pasif, sehingga seharusnya 'The report written by the committee...'. Kalimat A benar karena 'purchased' (V3) tepat untuk makna pasif (laptop yang DIBELI). Kalimat B benar karena 'standing' (V-ing) tepat untuk makna aktif (murid yang SEDANG berdiri). Kalimat C benar karena 'collected' (V3) tepat untuk makna pasif (data yang DIKUMPULKAN). Kalimat E benar karena 'teaching' (V-ing) tepat untuk makna aktif (profesor yang SEDANG mengajar)."
+  },
+  {
+    t: "One Clause",
+    q: "_____ during the unscheduled power outage caused significant data loss in the primary server cluster.",
+    o: [
+      "The sudden system crash",
+      "Because the system crashed",
+      "When the system crashed",
+      "Since the system crashed",
+      "That the system crashed",
+    ],
+    c: 0,
+    e: "Kalimat ini membutuhkan Subjek berupa Noun Phrase untuk verba 'caused'. Opsi A ('The sudden system crash') adalah noun phrase murni yang berfungsi sempurna sebagai subjek tunggal. Opsi B, C, dan D diawali adverb connector ('because', 'when', 'since') sehingga membentuk adverb clause, bukan subjek, yang menyebabkan kalimat kehilangan subjek utama. Opsi E ('That the system crashed') adalah noun clause, namun opsi A adalah pilihan noun phrase yang paling langsung, padat, dan alami untuk berpasangan dengan prepositional phrase 'during the unscheduled power outage'."
+  },
+  {
+    t: "One Clause",
+    q: "With extreme precision, _____ the critical security patch across all production servers.",
+    o: [
+      "the DevOps engineer deployed",
+      "deployed the DevOps engineer",
+      "the deployment of the DevOps engineer",
+      "deploying the DevOps engineer",
+      "was deployed by the DevOps engineer",
+    ],
+    c: 0,
+    e: "Di awal kalimat terdapat prepositional phrase ('With extreme precision'). Ingat aturan materi: objek dari preposisi ('extreme precision') BUKAN subjek kalimat! Oleh karena itu, setelah koma kalimat tetap wajib memiliki Subjek + Verba lengkap. Opsi A ('the DevOps engineer deployed') menyediakan Subjek ('the DevOps engineer') dan Verba ('deployed'). Opsi B salah susunan kata (inversi tanpa alasan gramatikal). Opsi C hanya noun phrase tanpa verba utama. Opsi D menggunakan V-ing tanpa auxiliary sehingga tidak ada verba utama. Opsi E adalah bentuk pasif tanpa subjek pelaku di posisi awal klausa."
+  },
+  {
+    t: "One Clause",
+    q: "_____, the Python programming language is widely taught in introductory computer science courses.",
+    o: [
+      "Developed by Guido van Rossum in 1991",
+      "It was developed by Guido van Rossum in 1991",
+      "Guido van Rossum developed it in 1991",
+      "That was developed by Guido van Rossum in 1991",
+      "In 1991 was developed by Guido van Rossum",
+    ],
+    c: 0,
+    e: "Pola ini adalah appositive / participial modifier di awal kalimat yang menerangkan subjek 'the Python programming language'. Opsi A berupa past participle phrase yang berfungsi sebagai adjective modifier pasif (diciptakan oleh Guido van Rossum). Opsi B dan C salah karena menambahkan subjek dan verba independen ('It was developed' / 'Guido van Rossum developed') sehingga terjadi comma splice (dua kalimat utuh disambung koma tanpa connector). Opsi D menambahkan 'That' yang menjadikannya relative clause tanpa noun utama. Opsi E tidak memiliki subjek sebelum verba 'was developed'."
+  },
+  {
+    t: "One Clause",
+    q: "The virtual machines _____ on the secondary node will automatically migrate if a hardware failure occurs.",
+    o: [
+      "running",
+      "are running",
+      "were ran",
+      "which running",
+      "they are running",
+    ],
+    c: 0,
+    e: "Kalimat ini sudah memiliki verba utama di klausa utama, yaitu 'will automatically migrate'. Maka, kata kerja di antara subjek 'The virtual machines' dan 'will migrate' harus berupa adjective modifier (present participle V-ing) bermakna aktif: mesin virtual yang SEDANG berjalan. Opsi A ('running') tepat. Opsi B ('are running') salah karena memasukkan be-verb sehingga ada dua verba utama ('are running' dan 'will migrate') tanpa konjungsi. Opsi C salah bentuk gramatikal ('were ran'). Opsi D memasukkan 'which' tetapi tanpa be-verb ('which running' tidak lengkap). Opsi E memasukkan subjek ganda 'they' dan verba 'are running'."
+  },
+  {
+    t: "One Clause",
+    q: "All confidential files _____ during the ransomware attack were successfully recovered from offsite backups.",
+    o: [
+      "encrypted",
+      "encrypting",
+      "were encrypted",
+      "they encrypted",
+      "which encrypting",
+    ],
+    c: 0,
+    e: "Verba utama kalimat sudah ada di belakang, yaitu 'were successfully recovered'. Oleh karena itu, kata setelah 'files' harus berfungsi sebagai adjective pengurang/modifier pasif berupa Past Participle (V3), yaitu 'encrypted' (file yang DI-enkripsi). Opsi B ('encrypting') salah karena V-ing bermakna aktif (file yang mengenkripsi). Opsi C ('were encrypted') salah karena menambahkan be-verb sehingga kalimat memiliki dua verba utama ('were encrypted' dan 'were recovered') tanpa connector. Opsi D ('they encrypted') menambahkan subjek baru 'they'. Opsi E ('which encrypting') tidak gramatikal karena adjective clause membutuhkan be-verb jika ingin memakai participle."
+  },
+  {
+    t: "One Clause",
+    q: "The rapid expansion of distributed computing architectures _____ new challenges in latency management.",
+    o: [
+      "has introduced",
+      "introducing",
+      "to introduce",
+      "is introduced",
+      "introduction",
+    ],
+    c: 0,
+    e: "Subjek kalimat adalah 'The rapid expansion' (tunggal/singular), diikuti frasa preposisi 'of distributed computing architectures'. Kalimat ini belum memiliki verba utama (main verb). Opsi A ('has introduced') adalah finite verb ber-tenses (present perfect) yang sesuai dengan subjek tunggal 'expansion'. Opsi B ('introducing') dan C ('to introduce') adalah non-finite forms (participle dan infinitive) yang tidak bisa berdiri sendiri sebagai verba utama kalimat. Opsi D ('is introduced') berbentuk pasif dan tidak logis karena ekspansi itulah yang memperkenalkan/menimbulkan tantangan (makna aktif). Opsi E ('introduction') adalah noun, bukan verba."
+  },
+  {
+    t: "One Clause",
+    q: "A detailed analysis of the server logs from all five branch offices _____ that an unauthorized port was opened.",
+    o: [
+      "indicates",
+      "indicate",
+      "indicating",
+      "are indicating",
+      "were indicated",
+    ],
+    c: 0,
+    e: "Inti subjek (head noun) adalah 'A detailed analysis' yang berbentuk tunggal (singular). Frasa 'of the server logs' dan 'from all five branch offices' hanyalah prepositional phrases yang tidak mempengaruhi kesesuaian subjek-verba (subject-verb agreement). Verba yang tepat untuk subjek tunggal dalam simple present adalah 'indicates' (dengan akhiran -s). Opsi B ('indicate') dan D ('are indicating') berbentuk jamak. Opsi C ('indicating') bukan finite verb. Opsi E ('were indicated') berbentuk jamak dan pasif yang tidak cocok dengan klausa noun di belakangnya ('that an unauthorized port...')."
+  },
+  {
+    t: "One Clause",
+    q: "Ada Lovelace, _____, is celebrated annually for her foundational work on Charles Babbage's Analytical Engine.",
+    o: [
+      "the daughter of Lord Byron and a pioneer in computing",
+      "was the daughter of Lord Byron and a pioneer in computing",
+      "who she was the daughter of Lord Byron",
+      "being that she was the daughter of Lord Byron",
+      "she was a pioneer in computing",
+    ],
+    c: 0,
+    e: "Posisi di antara dua koma setelah subjek 'Ada Lovelace' membutuhkan appositive (noun phrase yang menerangkan subjek) tanpa verba utama tambahan, karena verba utama kalimat adalah 'is celebrated'. Opsi A adalah noun phrase murni yang tepat mengisi posisi appositive. Opsi B salah karena menyisipkan verba 'was', menciptakan dua verba utama tanpa connector. Opsi C salah karena penggunaan subjek ganda 'who she was'. Opsi D dan E salah karena menambahkan subjek dan verba klausa mandiri yang melanggar struktur appositive."
+  },
+  {
+    t: "One Clause",
+    q: "Pilih kalimat yang TIDAK memiliki verba utama (incomplete sentence / fragment).",
+    o: [
+      "The research team investigating the algorithmic bias in large language models.",
+      "The research team investigated the algorithmic bias in large language models.",
+      "The research team is investigating the algorithmic bias in large language models.",
+      "The research team has investigated the algorithmic bias in large language models.",
+      "The research team will investigate the algorithmic bias in large language models.",
+    ],
+    c: 0,
+    e: "Kalimat A adalah sentence fragment (kalimat tidak lengkap). Frasa 'investigating the algorithmic bias...' hanya berfungsi sebagai participial modifier (adjective) yang menerangkan 'The research team', sehingga seluruh kalimat ini hanyalah satu Noun Phrase panjang tanpa Verba Utama (predicate verb). Pada opsi B, C, D, dan E, masing-masing memiliki verba utama yang sah ('investigated', 'is investigating', 'has investigated', 'will investigate')."
+  },
+  {
+    t: "Connectors",
+    q: "The newly installed intrusion detection system flagged several abnormal requests, _____ none of them resulted in a data breach.",
+    o: [
+      "but",
+      "so",
+      "or",
+      "for",
+      "because",
+    ],
+    c: 0,
+    e: "Dua klausa independen ini menunjukkan hubungan kontras/pertentangan: sistem mendeteksi permintaan abnormal, TETAPI tidak ada yang berujung kebocoran data. Konjungsi koordinatif untuk kontras adalah 'but' (didahului tanda koma). 'So' menunjukkan sebab-akibat/hasil. 'Or' menunjukkan pilihan. 'For' menunjukkan alasan (karena). 'Because' adalah subordinator, bukan koordinator, dan jika dipakai setelah koma di tengah dua klausa mandiri seperti ini strukturnya tidak sepadan dengan pola coordinate connector yang diuji."
+  },
+  {
+    t: "Connectors",
+    q: "The database connection pool reached its maximum capacity, _____ the application temporarily rejected incoming user requests.",
+    o: [
+      "so",
+      "yet",
+      "but",
+      "although",
+      "whereas",
+    ],
+    c: 0,
+    e: "Hubungan antara klausa pertama (kolam koneksi database penuh) dan klausa kedua (aplikasi menolak permintaan pengguna) adalah hubungan sebab-akibat / hasil logis (cause and effect). Konjungsi koordinatif yang menyatakan hasil/akibat adalah 'so'. 'Yet' dan 'but' menyatakan pertentangan/kontras. 'Although' dan 'whereas' adalah adverb connectors (subordinating) yang tidak berpola 'Klausa 1, [connector] Klausa 2' seperti pola coordinate conjunction 'so'."
+  },
+  {
+    t: "Connectors",
+    q: "The user must provide a valid two-factor authentication token, _____ the system will terminate the login session immediately.",
+    o: [
+      "or",
+      "and",
+      "but",
+      "so",
+      "yet",
+    ],
+    c: 0,
+    e: "Kalimat ini menyatakan alternatif atau konsekuensi jika syarat tidak dipenuhi: pengguna harus memasukkan token autentikasi, ATAU sistem akan langsung menghentikan sesi login. Konjungsi koordinatif untuk pilihan/alternatif negatif ini adalah 'or'. 'And' menyatakan penambahan sejalan. 'But' dan 'yet' menyatakan kontras. 'So' menyatakan akibat langsung dari suatu kenyataan, bukan pilihan kondisional seperti 'or'."
+  },
+  {
+    t: "Connectors",
+    q: "The software startup had very limited funding, _____ its engineering team managed to build an award-winning application.",
+    o: [
+      "yet",
+      "so",
+      "or",
+      "for",
+      "since",
+    ],
+    c: 0,
+    e: "Klausa pertama (pendanaan sangat terbatas) dan klausa kedua (berhasil membuat aplikasi peraih penghargaan) saling bertolak belakang (kejutan/kontras). 'Yet' adalah coordinate connector yang berarti 'namun demikian/tetapi', sangat tepat di sini sejalan dengan contoh materi 'Tom is tired, yet he is not going to sleep.' 'So' salah karena mengindikasikan akibat yang wajar (pendanaan sedikit tentu bukan sebab logis dari membuat aplikasi hebat). 'Or' salah karena bukan pilihan. 'For' berarti 'karena'. 'Since' adalah subordinator."
+  },
+  {
+    t: "Connectors",
+    q: "_____ the senior architect was refactoring the core authentication module, the junior developers wrote unit tests.",
+    o: [
+      "While",
+      "During",
+      "Because of",
+      "Despite",
+      "Although that",
+    ],
+    c: 0,
+    e: "Di awal kalimat terdapat klausa lengkap: Subject ('the senior architect') + Verb ('was refactoring'). Oleh karena itu, kita membutuhkan adverb connector of time, yaitu 'While' (diikuti koma di akhir adverb clause). Opsi B ('During'), C ('Because of'), dan D ('Despite') adalah preposisi yang hanya boleh diikuti Noun/Noun Phrase, bukan klausa Subject + Verb. Opsi E ('Although that') bukan bentukan konjungsi bahasa Inggris yang baku."
+  },
+  {
+    t: "Connectors",
+    q: "The automated build process will not proceed to the production stage _____ all unit tests pass with one hundred percent compliance.",
+    o: [
+      "unless",
+      "without",
+      "except",
+      "despite",
+      "if not that",
+    ],
+    c: 0,
+    e: "Kalimat ini membutuhkan konjungsi pengandaian/kondisi bermakna 'kecuali jika' (if not) yang menghubungkan klausa utama dengan klausa adverb ('all unit tests pass...'). 'Unless' adalah adverb connector yang tepat diikuti S + V. Opsi B ('without') dan C ('except') adalah preposisi yang membutuhkan noun/gerund, bukan klausa S + V. Opsi D ('despite') adalah preposisi kontras. Opsi E ('if not that') bukan bentukan konjungsi yang tepat."
+  },
+  {
+    t: "Connectors",
+    q: "_____ the open-source library has minimal documentation, many developers prefer it because of its lightning-fast performance.",
+    o: [
+      "Although",
+      "In spite of",
+      "Despite",
+      "However",
+      "Nevertheless",
+    ],
+    c: 0,
+    e: "Di awal kalimat ada klausa Subject ('the open-source library') + Verb ('has'). Konjungsi kontras yang dapat mengawali adverb clause (S+V) adalah 'Although'. Opsi B ('In spite of') dan C ('Despite') adalah preposisi yang harus diikuti noun phrase, bukan klausa S+V. Opsi D ('However') dan E ('Nevertheless') adalah conjunctive adverbs yang menghubungkan dua kalimat mandiri dengan titik koma atau titik, tidak bisa mengawali dependent adverb clause yang diikuti koma ke main clause seperti ini."
+  },
+  {
+    t: "Connectors",
+    q: "The web application crashed repeatedly yesterday _____ the caching server ran out of allocated memory.",
+    o: [
+      "because",
+      "because of",
+      "due to",
+      "owing to",
+      "as a result of",
+    ],
+    c: 0,
+    e: "Setelah rumpang terdapat klausa lengkap: Subjek ('the caching server') + Verba ('ran out'). Konjungsi subordinatif sebab-akibat yang menghubungkan klausa dengan klausa adalah 'because'. Opsi B ('because of'), C ('due to'), D ('owing to'), dan E ('as a result of') semuanya adalah preposisi (prepositional phrases) yang hanya boleh diikuti kata benda (noun phrase), bukan klausa Subjek + Verba."
+  },
+  {
+    t: "Connectors",
+    q: "Manakah kalimat yang menerapkan aturan tanda koma pada adverb clause dengan BENAR?",
+    o: [
+      "Even though the team worked overtime, they could not fix all critical bugs before the deadline.",
+      "Even though the team worked overtime they could not fix all critical bugs before the deadline.",
+      "The team could not fix all critical bugs before the deadline, even though they worked overtime.",
+      "The team, could not fix all critical bugs before the deadline even though they worked overtime.",
+      "Even though, the team worked overtime they could not fix all critical bugs before the deadline.",
+    ],
+    c: 0,
+    e: "Aturan tata bahasa baku: jika Adverb Clause diletakkan di AWAL kalimat ('Even though the team worked overtime'), maka WAJIB diikuti tanda koma sebelum klausa utama. Sebaliknya, jika Adverb Clause diletakkan di BELAKANG, umumnya TIDAK memakai koma. Opsi A benar karena memberi koma setelah klausa adverb pembuka. Opsi B salah karena tidak ada koma pemisah. Opsi C memberi koma yang tidak diperlukan sebelum adverb clause di belakang. Opsi D menaruh koma setelah subjek utama. Opsi E menaruh koma setelah kata 'Even though'."
+  },
+  {
+    t: "Connectors",
+    q: "Pilih kalimat yang SALAH karena memiliki kesalahan double connector.",
+    o: [
+      "Although the neural network was trained on millions of images, but it still made errors on ambiguous inputs.",
+      "Although the neural network was trained on millions of images, it still made errors on ambiguous inputs.",
+      "The neural network was trained on millions of images, but it still made errors on ambiguous inputs.",
+      "Because the dataset was biased, the resulting predictions favored certain demographic groups.",
+      "The dataset was biased, so the resulting predictions favored certain demographic groups.",
+    ],
+    c: 0,
+    e: "Kalimat A mengandung kesalahan fatal 'Double Connector': menggunakan 'Although' (subordinator) dan 'but' (koordinator) sekaligus dalam satu kalimat. Dalam bahasa Inggris, pilih salah satu: gunakan 'Although..., [klausa utama]' seperti opsi B, ATAU '[klausa 1], but [klausa 2]' seperti opsi C. Menggabungkan 'Although' dan 'but' bersamaan adalah kesalahan struktur yang sering diujikan dalam tes TOEFL/akademik. Opsi D dan E benar dalam penggunaan konektor tunggal."
+  },
+  {
+    t: "Noun Clause",
+    q: "The cybersecurity team is deeply concerned about _____ the malware managed to bypass the perimeter firewall.",
+    o: [
+      "how",
+      "that",
+      "what",
+      "which",
+      "where did",
+    ],
+    c: 0,
+    e: "Preposisi 'about' membutuhkan objek berupa noun clause. Noun clause yang menerangkan CARA malware berhasil melewati firewall adalah 'how the malware managed...'. Pola noun clause adalah Connector + Subject + Verb. Opsi B ('that') tidak biasa dipakai langsung setelah preposisi 'about' dalam konteks cara/mekanisme. Opsi C ('what') salah karena klausa di belakangnya sudah memiliki objek ('the perimeter firewall') dan subjek ('the malware') yang lengkap. Opsi D ('which') membutuhkan pilihan spesifik atau noun. Opsi E ('where did') salah karena menggunakan susunan kata tanya (did sebelum subjek)."
+  },
+  {
+    t: "Noun Clause",
+    q: "_____ artificial intelligence will automate routine coding tasks is no longer a matter of speculation.",
+    o: [
+      "That",
+      "What",
+      "Whether that",
+      "Which",
+      "If",
+    ],
+    c: 0,
+    e: "Noun clause di awal kalimat berfungsi sebagai SUBJEK dari verba 'is'. Klausa di dalamnya adalah kalimat pernyataan lengkap: 'artificial intelligence (S) will automate (V) routine coding tasks (O)'. Connector yang digunakan untuk mengubah pernyataan lengkap menjadi noun clause sebagai subjek kalimat adalah 'That' (bahwa). 'What' salah karena 'what' menggantikan noun/objek yang hilang, padahal kalimat di dalamnya sudah lengkap. 'Whether that' menggabungkan dua konektor keliru. 'Which' menuntut pilihan. 'If' tidak boleh mengawali noun clause yang berada di posisi SUBJEK kalimat (hanya 'whether' yang boleh di posisi subjek, bukan 'if')."
+  },
+  {
+    t: "Noun Clause",
+    q: "_____ the company will transition to a fully remote work model has not yet been announced by senior management.",
+    o: [
+      "Whether",
+      "If",
+      "That if",
+      "Why did",
+      "What will",
+    ],
+    c: 0,
+    e: "Aturan baku noun clause: kata 'if' dan 'whether' keduanya bisa berarti 'apakah', TETAPI 'if' hanya boleh dipakai untuk noun clause di posisi OBJEK, sedangkan di posisi SUBJEK kalimat HANYA 'Whether' yang diizinkan secara gramatikal. Opsi A ('Whether') benar. Opsi B ('If') melanggar aturan posisi subjek. Opsi C ('That if') rancu. Opsi D ('Why did') dan E ('What will') memakai struktur inversi tanya yang keliru dalam noun clause."
+  },
+  {
+    t: "Noun Clause",
+    q: "The project manager asked the software architect _____ during the system migration.",
+    o: [
+      "what went wrong",
+      "what did go wrong",
+      "what was gone wrong",
+      "what did it go wrong",
+      "what wrong went",
+    ],
+    c: 0,
+    e: "Dalam noun clause, 'what' dapat berfungsi ganda sebagai connector sekaligus subjek klausa ('what' = subjek), diikuti langsung oleh verba ('went wrong'). Noun clause TIDAK menggunakan auxiliary 'did' seperti pada kalimat tanya langsung. Opsi A ('what went wrong') benar dan alami. Opsi B ('what did go wrong') dan D ('what did it go wrong') salah karena memasukkan auxiliary 'did'. Opsi C ('what was gone wrong') salah bentuk pasif. Opsi E ('what wrong went') mengacak susunan kata."
+  },
+  {
+    t: "Noun Clause",
+    q: "The network administrator could not understand _____.",
+    o: [
+      "why the primary domain controller crashed",
+      "why did the primary domain controller crash",
+      "why crashed the primary domain controller",
+      "why had the primary domain controller crashed",
+      "why was crashed the primary domain controller",
+    ],
+    c: 0,
+    e: "Noun clause sebagai objek verba ('could not understand') harus mengikuti urutan kalimat pernyataan normal: Connector ('why') + Subject ('the primary domain controller') + Verb ('crashed'). Opsi B dan D salah karena menggunakan struktur kalimat tanya langsung dengan auxiliary ('did' / 'had') ditaruh di depan subjek. Opsi C dan E salah karena membalik posisi kata kerja di depan subjek."
+  },
+  {
+    t: "Noun Clause",
+    q: "_____ discovers a critical security vulnerability in the system will be awarded a ten-thousand-dollar bounty.",
+    o: [
+      "Whoever",
+      "Whomever",
+      "Anyone",
+      "Those who",
+      "He who",
+    ],
+    c: 0,
+    e: "Rumpang membutuhkan connector yang sekaligus berfungsi sebagai SUBJEK untuk verba 'discovers' di dalam noun clause tersebut. 'Whoever' adalah bentuk nominatif/subjek yang tepat. 'Whomever' salah karena merupakan bentuk objektif (objek). 'Anyone' dan 'He who' salah karena tanpa noun clause connector yang tepat, kalimat akan memiliki dua verba ('discovers' dan 'will be awarded') tanpa connector klausa subjek. 'Those who' berbentuk jamak sehingga tidak cocok dengan verba singular 'discovers'."
+  },
+  {
+    t: "Noun Clause",
+    q: "Manakah kalimat dengan noun clause yang strukturnya SALAH?",
+    o: [
+      "The IT director inquired how long would the database maintenance take.",
+      "The IT director inquired how long the database maintenance would take.",
+      "Nobody knows who authorized the deletion of the backup archives.",
+      "What the lead developer proposed at the meeting impressed the entire board.",
+      "We need to find out whether the security patch has been deployed.",
+    ],
+    c: 0,
+    e: "Kalimat A salah karena noun clause-nya ('how long would the database maintenance take') menggunakan struktur inversi kalimat tanya langsung, di mana modal auxiliary 'would' diletakkan sebelum subjek 'the database maintenance'. Aturan baku noun clause mengharuskan urutan pernyataan biasa: Connector ('how long') + Subject ('the database maintenance') + Verb ('would take'), seperti yang dicontohkan dengan benar pada opsi B. Opsi C, D, dan E semuanya menerapkan noun clause dengan struktur yang benar."
+  },
+  {
+    t: "Adjective Clause",
+    q: "The software engineers _____ designed the distributed database architecture were awarded patents for their innovation.",
+    o: [
+      "who",
+      "whom",
+      "which",
+      "whose",
+      "whom they",
+    ],
+    c: 0,
+    e: "Antecedent adalah orang ('The software engineers') dan dalam adjective clause berfungsi sebagai SUBJEK dari verba 'designed' (karena langsung diikuti kata kerja). Connector yang tepat untuk subjek orang adalah 'who'. 'Whom' hanya untuk objek orang. 'Which' untuk benda/binatang. 'Whose' untuk kepemilikan. 'Whom they' menambahkan subjek ganda yang keliru."
+  },
+  {
+    t: "Adjective Clause",
+    q: "The systems architect _____ the tech company hired last month has revamped the entire cloud infrastructure.",
+    o: [
+      "whom",
+      "which",
+      "whose",
+      "what",
+      "where",
+    ],
+    c: 0,
+    e: "Antecedent adalah orang ('The systems architect'). Di dalam adjective clause, terdapat subjek ('the tech company') dan verba ('hired'), sehingga connector berfungsi sebagai OBJEK dari 'hired' (perusahaan mempekerjakan SIAPA). Dalam tata bahasa baku/formal (TOEFL), relative pronoun untuk objek orang adalah 'whom'. 'Which' untuk benda. 'Whose' untuk kepemilikan. 'What' bukan relative pronoun untuk adjective clause (hanya untuk noun clause). 'Where' untuk tempat."
+  },
+  {
+    t: "Adjective Clause",
+    q: "We interviewed a senior cybersecurity consultant _____ specialized research on ransomware defense has been widely cited.",
+    o: [
+      "whose",
+      "who",
+      "whom",
+      "which",
+      "that his",
+    ],
+    c: 0,
+    e: "Kata setelah rumpang adalah frasa benda 'specialized research' yang merupakan milik/karya dari 'a senior cybersecurity consultant'. Relative pronoun yang menunjukkan kepemilikan (possesif) adalah 'whose' ('whose research' = riset miliknya). 'Who' untuk subjek. 'Whom' untuk objek. 'Which' untuk benda. 'That his' adalah kesalahan redundant pronoun (pengulangan kata ganti posesif 'his' setelah connector)."
+  },
+  {
+    t: "Adjective Clause",
+    q: "The agile sprint framework is a collaborative methodology _____ cross-functional teams deliver incremental software updates.",
+    o: [
+      "in which",
+      "which",
+      "at that",
+      "where in",
+      "whose",
+    ],
+    c: 0,
+    e: "Tim memberikan pembaruan perangkat lunak DI DALAM metodologi tersebut ('in the methodology'). Kombinasi preposisi + relative pronoun yang tepat untuk benda adalah 'in which'. 'Which' saja tanpa preposisi salah karena klausa di belakangnya sudah memiliki subjek ('cross-functional teams') dan objek ('incremental software updates') yang lengkap. 'At that' tidak gramatikal karena 'that' tidak boleh didahului preposisi dalam adjective clause. 'Where in' dan 'whose' tidak sesuai konteks."
+  },
+  {
+    t: "Adjective Clause",
+    q: "Pilih kalimat yang menggunakan non-restrictive adjective clause dengan tanda baca yang BENAR.",
+    o: [
+      "Python, which was released by Guido van Rossum in 1991, has become one of the world's most popular programming languages.",
+      "Python which was released by Guido van Rossum in 1991, has become one of the world's most popular programming languages.",
+      "Python, that was released by Guido van Rossum in 1991, has become one of the world's most popular programming languages.",
+      "Python which was released by Guido van Rossum in 1991 has become one of the world's most popular programming languages.",
+      "Python, which was released by Guido van Rossum in 1991 has become one of the world's most popular programming languages.",
+    ],
+    c: 0,
+    e: "'Python' adalah nama diri (proper noun) yang spesifik, sehingga klausa penjelasnya bersifat non-restrictive (non-defining / memberi info tambahan). Aturan materi: non-restrictive clause WAJIB diapit oleh sepasang tanda koma di awal dan akhir klausa, dan WAJIB menggunakan 'which' (BUKAN 'that'). Opsi A menerapkan kedua koma dan kata 'which' dengan tepat. Opsi B dan E hanya memiliki satu koma. Opsi C menggunakan 'that' dengan koma (aturan baku: 'that' tidak boleh dipakai dalam non-restrictive clause ber-koma). Opsi D tidak memiliki koma sama sekali."
+  },
+  {
+    t: "Adjective Clause",
+    q: "Manakah kalimat adjective clause berikut yang strukturnya SALAH?",
+    o: [
+      "The laptop that I bought it yesterday has already malfunctioned.",
+      "The laptop that I bought yesterday has already malfunctioned.",
+      "The laptop which I bought yesterday has already malfunctioned.",
+      "The laptop I bought yesterday has already malfunctioned.",
+      "The laptop, which cost me a fortune, has already malfunctioned.",
+    ],
+    c: 0,
+    e: "Kalimat A mengandung kesalahan 'Double Object' / 'Redundant Pronoun'. Kata 'that' sudah menggantikan posisi objek 'the laptop' dari kata kerja 'bought'. Menambahkan pronoun 'it' ('I bought it') membuat kalimat memiliki objek ganda yang melanggar aturan adjective clause. Seharusnya 'that I bought yesterday' (seperti pada opsi B). Opsi C juga benar memakai 'which'. Opsi D benar karena relative pronoun sebagai objek boleh dihilangkan (contact clause). Opsi E benar sebagai non-restrictive clause."
+  },
+  {
+    t: "Reduced Clause",
+    q: "The automated script _____ network latency every sixty seconds detected a sudden packet loss.",
+    o: [
+      "measuring",
+      "measured",
+      "which measuring",
+      "was measuring",
+      "is measured",
+    ],
+    c: 0,
+    e: "Bentuk aslinya adalah 'The automated script which measures / which was measuring network latency...'. Karena verbanya aktif (skrip tersebut yang mengukur latensi), pola reduksi adjective clause adalah menghilangkan relative pronoun dan mengubah verba menjadi Present Participle (V-ing), menghasilkan 'measuring'. 'Measured' (V3) salah karena bermakna pasif (skrip yang diukur). 'Which measuring' salah karena jika 'which' dipertahankan, harus ada be-verb lengkap. 'Was measuring' salah karena menciptakan dua verba utama tanpa konjungsi. 'Is measured' salah bentuk pasif dan ada dua verba."
+  },
+  {
+    t: "Reduced Clause",
+    q: "Any device _____ to the corporate intranet without multi-factor authentication will be disconnected immediately.",
+    o: [
+      "connected",
+      "connecting",
+      "connects",
+      "which connecting",
+      "is connected",
+    ],
+    c: 0,
+    e: "Bentuk aslinya adalah 'Any device that is connected to the corporate intranet...'. Karena bermakna pasif (perangkat yang DI-sambungkan), reduksi dilakukan dengan membuang connector 'that' dan be-verb 'is', menyisakan Past Participle (V3) 'connected'. Opsi B ('connecting') salah karena V-ing bermakna aktif (perangkat yang menyambungkan). Opsi C ('connects') dan E ('is connected') salah karena menciptakan verba ganda dengan 'will be disconnected'. Opsi D ('which connecting') tidak gramatikal."
+  },
+  {
+    t: "Reduced Clause",
+    q: "_____ the source code repository to their local machines, the developers ran the initial automated test suite.",
+    o: [
+      "After cloning",
+      "After cloned",
+      "After they cloning",
+      "After clone",
+      "After to clone",
+    ],
+    c: 0,
+    e: "Kalimat aslinya adalah 'After they cloned the source code repository..., the developers ran...'. Karena subjek kedua klausa sama ('they' = 'the developers') dan tindakannya aktif, reduksi adverb clause mempertahankan connector 'After' dan mengubah verba menjadi V-ing: 'After cloning...'. Opsi B ('After cloned') salah karena V3 menandakan pasif. Opsi C ('After they cloning') salah karena subjek 'they' seharusnya dihilangkan jika direduksi. Opsi D ('After clone') memakai bentuk dasar yang tidak bisa mengikuti preposisi/konjungsi 'after'. Opsi E ('After to clone') salah bentukan."
+  },
+  {
+    t: "Reduced Clause",
+    q: "_____ properly configured, the firewall can mitigate up to ninety-nine percent of automated DDoS attacks.",
+    o: [
+      "If",
+      "If it",
+      "If is",
+      "Even",
+      "Unless being",
+    ],
+    c: 0,
+    e: "Kalimat aslinya: 'If it is properly configured, the firewall can mitigate...'. Ini adalah reduced adverb clause dengan be-verb bermakna pasif. Aturan materi: hilangkan Subjek ('it') dan be-verb ('is') secara bersamaan, sehingga menyisakan connector 'If' + Past Participle 'properly configured'. Opsi B ('If it') menyisakan subjek tanpa verba. Opsi C ('If is') menyisakan be-verb tanpa subjek. Opsi D ('Even') bukan konjungsi kondisional yang tepat di sini. Opsi E ('Unless being') salah makna dan rancu."
+  },
+  {
+    t: "Reduced Clause",
+    q: "_____ severely damaged by the electrical surge, the primary database server still preserved all transaction logs.",
+    o: [
+      "Although",
+      "Although was",
+      "Although it",
+      "Despite was",
+      "In spite of",
+    ],
+    c: 0,
+    e: "Kalimat aslinya: 'Although it was severely damaged by the electrical surge, the primary database server still preserved...'. Dalam reduksi adverb clause dengan be-verb, Subjek ('it') dan be-verb ('was') dihilangkan bersamaan, menyisakan connector 'Although' + participle phrase 'severely damaged...'. Opsi B ('Although was') salah karena meninggalkan 'was'. Opsi C ('Although it') salah karena meninggalkan 'it'. Opsi D dan E salah secara gramatikal."
+  },
+  {
+    t: "Reduced Clause",
+    q: "Pilih kalimat yang BENAR dan bebas dari kesalahan dangling modifier.",
+    o: [
+      "Having completed the cybersecurity audit, the senior consultant submitted the final report to the executive board.",
+      "Having completed the cybersecurity audit, the final report was submitted to the executive board by the senior consultant.",
+      "Walking into the server room, the freezing temperature was immediately felt.",
+      "While repairing the fiber optic cable, the power drill suddenly broke down.",
+      "To optimize the database query, extensive indexing was performed by the script.",
+    ],
+    c: 0,
+    e: "Dalam aturan participial phrase / reduced clause di awal kalimat, subjek klausa utama HARUS berupa pelaku logis dari tindakan pembuka tersebut. Siapa yang menyelesaikan audit ('Having completed the audit')? Yaitu konsultan senior ('the senior consultant'). Pada opsi B, subjek utama adalah 'the final report', yang secara tidak masuk akal menjadi subjek yang 'menyelesaikan audit' (dangling modifier). Hal serupa terjadi pada C (suhu tidak bisa berjalan ke ruang server), D (bor tidak bisa memperbaiki kabel), dan E. Hanya opsi A yang benar secara logika dan gramatikal."
+  },
+  {
+    t: "Reduced Clause",
+    q: "Pilih kalimat yang SALAH dalam pembentukan reduced clause.",
+    o: [
+      "The research paper, publishing in a prestigious journal last month, received widespread acclaim.",
+      "The research paper, published in a prestigious journal last month, received widespread acclaim.",
+      "When configuring the router, you must follow the official security guidelines.",
+      "Unless requested otherwise, the system will send weekly activity digests.",
+      "While working remotely, the developers maintain constant communication via Slack.",
+    ],
+    c: 0,
+    e: "Kalimat A salah karena menggunakan Present Participle 'publishing' (V-ing/aktif), padahal makalah penelitian itu DI-publikasikan (makna pasif) di jurnal, bukan makalah itu yang mempublikasikan. Aturan materi menegaskan: untuk makna pasif, gunakan Past Participle (V3), yaitu 'published' (seperti pada opsi B). Opsi C, D, dan E semuanya adalah bentuk reduced adverb clause yang tepat dan gramatikal."
+  },
+];
+
+const BANK2 = [
+  {
+    t: "Parallel Structure",
+    q: "The new policy aims to reduce printing costs, save paper, and _____.",
+    o: [
+      "protecting the environment",
+      "protection of the environment",
+      "protect the environment",
+      "to protecting the environment",
+      "protected the environment",
+    ],
+    c: 2,
+    e: "Aturan parallel structure menuntut semua unsur yang dihubungkan coordinator ('and') berpola sama. Di sini unsur pertama dan kedua sudah berbentuk verba dasar: 'reduce' dan 'save' (keduanya mengikuti pola 'aims to + V1'), sehingga unsur ketiga juga wajib berbentuk verba dasar: 'protect'. 'Protecting' salah karena mengubah pola menjadi gerund, tidak sejajar dengan 'reduce' dan 'save' yang berupa base verb. 'Protection of the environment' salah karena berubah menjadi noun phrase, sama sekali berbeda kelas kata dari dua unsur sebelumnya. 'To protecting the environment' salah karena mencampur 'to' dengan bentuk -ing, sebuah kombinasi yang tidak gramatikal sekaligus tidak paralel. 'Protected' salah karena berbentuk past participle/past tense, tidak sejajar dengan pola base verb pada dua unsur pertama."
+  },
+  {
+    t: "Parallel Structure",
+    q: "Pilih kalimat yang strukturnya PALING paralel dan benar.",
+    o: [
+      "He is known for being punctual, hardworking, and he always helps others.",
+      "He is known for being punctual, hardworking, and helpful to others.",
+      "He is known for punctual, being hardworking, and to help others.",
+      "He is known for being punctual, work hard, and helping others.",
+      "He is known for punctuality, hardworking, and helps others.",
+    ],
+    c: 1,
+    e: "Kalimat B konsisten memakai tiga adjective sejajar setelah 'being': 'punctual', 'hardworking', dan 'helpful to others' — semuanya adjective, sehingga paralel sempurna (equal expressions berupa adjective, sesuai aturan 'two or more equal... adjectives'). Opsi A salah karena unsur ketiga tiba-tiba berubah menjadi klausa penuh ('he always helps others') padahal dua unsur sebelumnya hanya berupa adjective. Opsi C salah karena mencampur adjective tanpa 'being' ('punctual'), gerund ('being hardworking'), dan infinitive ('to help others') dalam satu daftar — tiga bentuk berbeda yang melanggar paralelisme. Opsi D salah karena mencampur gerund ('being punctual'), bentuk dasar verba ('work hard'), dan gerund lagi ('helping others') secara tidak konsisten. Opsi E salah karena mencampur noun ('punctuality'), adjective ('hardworking'), dan verb berkonjugasi ('helps others'), tiga kelas kata berbeda yang seharusnya sejajar."
+  },
+  {
+    t: "Parallel Structure",
+    q: "The committee decided either to postpone the event _____ to cancel it entirely.",
+    o: [
+      "and",
+      "or",
+      "but also",
+      "than",
+      "nor",
+    ],
+    c: 1,
+    e: "'Either...or' adalah paired conjunction yang menghubungkan dua pilihan setara, persis seperti contoh materi 'He wants either to go by train or to go by plane.' Jadi pasangan yang benar untuk 'either' adalah 'or'. 'And' salah karena bukan pasangan baku dari 'either' dan tidak menunjukkan pilihan melainkan penambahan. 'But also' salah karena itu pasangan dari 'not only', bukan dari 'either'. 'Than' salah karena itu dipakai untuk perbandingan (comparative conjunction), bukan untuk menghubungkan pilihan paralel. 'Nor' salah karena 'nor' adalah pasangan dari 'neither', bukan dari 'either' — menukar pasangan ini adalah kesalahan paired conjunction yang umum diuji."
+  },
+  {
+    t: "Parallel Structure",
+    q: "Manakah kalimat berikut yang MELANGGAR aturan parallel structure?",
+    o: [
+      "She enjoys coding, designing, and debugging software.",
+      "The app is fast, reliable, and user-friendly.",
+      "He not only finished the project early but also exceeded expectations.",
+      "The workshop covers how to plan, how to execute, and evaluating the results.",
+      "Our team values honesty, transparency, and accountability.",
+    ],
+    c: 3,
+    e: "Kalimat D melanggar paralelisme karena dua unsur pertama berpola sama ('how to plan', 'how to execute' — infinitive dengan 'how to'), tetapi unsur ketiga tiba-tiba berubah menjadi gerund ('evaluating the results') tanpa pola 'how to' yang konsisten; seharusnya 'and how to evaluate the results'. Kalimat A benar karena tiga gerund sejajar ('coding, designing, debugging'). Kalimat B benar karena tiga adjective sejajar ('fast, reliable, user-friendly'). Kalimat C benar karena paired conjunction 'not only...but also' diikuti dua verba past tense yang sejajar ('finished' dan 'exceeded'). Kalimat E benar karena tiga noun sejajar ('honesty, transparency, accountability')."
+  },
+  {
+    t: "Comparative",
+    q: "This semester's workload is _____ last semester's.",
+    o: [
+      "heavier than",
+      "more heavy than",
+      "heavier as",
+      "the heaviest than",
+      "as heavier as",
+    ],
+    c: 0,
+    e: "Untuk adjective pendek satu suku kata seperti 'heavy' (dengan perubahan 'y' menjadi 'i' + '-er'), pola comparative yang benar adalah 'adjective-er + than', menghasilkan 'heavier than', sesuai aturan materi 'Use –er in the short adjective'. 'More heavy than' salah karena 'more' hanya dipakai untuk adjective panjang (2+ suku kata umumnya), bukan untuk adjective pendek seperti 'heavy' yang sudah punya bentuk -er sendiri. 'Heavier as' salah karena comparative dengan -er harus diikuti 'than', bukan 'as' — 'as' dipakai pada pola 'as + adjective + as' yang berbeda. 'The heaviest than' salah karena mencampur bentuk superlative ('the heaviest') dengan kata sambung comparative ('than'), kombinasi yang tidak gramatikal. 'As heavier as' salah karena mencampur dua pola berbeda: comparative '-er' dengan struktur 'as...as' secara bersamaan."
+  },
+  {
+    t: "Superlative",
+    q: "Among all the applicants, Maya has _____ qualifications for the position.",
+    o: [
+      "more impressive",
+      "the most impressive",
+      "most impressive",
+      "the more impressive",
+      "as impressive as",
+    ],
+    c: 1,
+    e: "Karena ada frasa 'among all the applicants' yang menandakan perbandingan di antara lebih dari dua pihak (superlative context), dan 'impressive' adalah adjective panjang, polanya adalah 'the most + adjective', menghasilkan 'the most impressive', sesuai aturan materi 'S + V be + the + most + Adj + Noun + in/of/that...'. 'More impressive' salah karena 'more' menandakan comparative (dua hal), bukan superlative (banyak hal), padahal konteks kalimat jelas membandingkan di antara SEMUA pelamar. 'Most impressive' salah karena kehilangan artikel 'the' yang wajib ada pada struktur superlative. 'The more impressive' salah karena mencampur artikel superlative 'the' dengan kata comparative 'more', kombinasi yang tidak sesuai aturan baku. 'As impressive as' salah karena itu pola kesetaraan (equal comparison), bukan superlative, dan tidak cocok dengan konteks 'di antara semua pelamar' yang menuntut satu yang paling unggul."
+  },
+  {
+    t: "Double Comparative",
+    q: "_____ you practice your presentation, _____ you will feel on the actual day.",
+    o: [
+      "The more / the more confident",
+      "More / more confident",
+      "The more / confident",
+      "The most / the most confident",
+      "More the / the more confident",
+    ],
+    c: 0,
+    e: "Pola double comparative ('the + comparative, the + comparative') menuntut kedua sisi kalimat memakai struktur paralel dengan 'the' di depan masing-masing bagian comparative, persis seperti contoh materi 'The harder you work, the more you accomplish.' Di sini 'the more' (menunjukkan intensitas latihan) dipasangkan dengan 'the more confident' (comparative dari 'confident' karena adjective panjang memakai 'more'). Opsi B salah karena menghilangkan 'the' di kedua sisi, melanggar pola wajib double comparative. Opsi C salah karena sisi kedua kehilangan kata 'more' sehingga 'confident' berdiri sendiri tanpa penanda comparative, padahal pola ini menuntut comparative di kedua sisi. Opsi D salah karena memakai bentuk superlative ('the most') padahal pola ini khusus untuk comparative, bukan superlative. Opsi E salah karena urutan 'more the' terbalik dan tidak sesuai pola baku 'the + comparative' yang harus dimulai dengan 'the'."
+  },
+  {
+    t: "Comparative",
+    q: "Manakah kalimat yang PALING tepat secara gramatikal?",
+    o: [
+      "Her second thesis is more clear than her first one.",
+      "Her second thesis is clearer than her first one.",
+      "Her second thesis is more clearer than her first one.",
+      "Her second thesis is clear than her first one.",
+      "Her second thesis is as more clear as her first one.",
+    ],
+    c: 1,
+    e: "'Clear' adalah adjective pendek satu suku kata, sehingga comparative-nya cukup ditambah '-er' menjadi 'clearer', lalu diikuti 'than', menghasilkan 'clearer than' yang gramatikal dan sesuai aturan 'Use –er in the short adjective'. Opsi A salah karena memakai 'more' pada adjective pendek yang seharusnya cukup '-er' saja — pencampuran dua pola comparative pada satu adjective pendek membuatnya kurang tepat secara gramatikal. Opsi C jelas salah karena 'more clearer' adalah double comparative pada satu kata, menggabungkan 'more' dan '-er' sekaligus, sebuah kesalahan umum yang tidak dibenarkan. Opsi D salah karena comparative wajib memiliki penanda comparative (baik '-er' atau 'more'), sedangkan di sini hanya 'clear than' tanpa penanda sama sekali. Opsi E salah karena mencampur pola 'as...as' (kesetaraan) dengan 'more' (comparative), dua struktur berbeda yang tidak boleh digabung."
+  },
+  {
+    t: "Parallel Structure",
+    q: "To succeed in this course, students must attend lectures regularly, complete assignments on time, and _____.",
+    o: [
+      "active participation in discussions",
+      "actively participate in discussions",
+      "actively participating in discussions",
+      "they should participate actively",
+      "participation actively in discussions",
+    ],
+    c: 1,
+    e: "Dua unsur pertama memakai pola base verb + objek: 'attend lectures' dan 'complete assignments', sehingga unsur ketiga juga wajib base verb: 'actively participate in discussions' (dengan adverb 'actively' sebagai modifier, bukan mengubah kelas kata verbanya). Ini sejalan dengan aturan paralel 'equal expressions' untuk verb phrase. 'Active participation in discussions' salah karena berubah menjadi noun phrase, tidak sejajar dengan dua verb phrase sebelumnya. 'Actively participating in discussions' salah karena berubah menjadi gerund phrase, berbeda kelas dengan base verb pada dua unsur sebelumnya. 'They should participate actively' salah karena menambahkan subjek dan modal baru, mengubahnya menjadi klausa penuh yang sama sekali tidak sejajar dengan frasa verba sebelumnya. 'Participation actively in discussions' salah karena strukturnya kacau (noun diikuti adverb secara tidak gramatikal) sekaligus tidak paralel sebagai noun phrase terhadap dua verb phrase lainnya."
+  },
+  {
+    t: "Comparative & Superlative",
+    q: "Pilih kalimat yang strukturnya SALAH.",
+    o: [
+      "This is the most challenging exam I have ever taken.",
+      "The sooner you start, the better results you will get.",
+      "Her explanation is more clearer than the textbook's.",
+      "This laptop is lighter than my old one.",
+      "He is by far the most dedicated member of the team.",
+    ],
+    c: 2,
+    e: "Kalimat C salah karena 'more clearer' adalah double comparative pada satu adjective ('clear'), menggabungkan 'more' dan akhiran '-er' sekaligus, padahal adjective pendek seperti 'clear' cukup memakai salah satu saja ('clearer' atau 'more clear', dan konvensinya untuk adjective sependek ini adalah '-er'). Kalimat A benar karena pola superlative 'the most + adjective panjang' ('challenging') sudah tepat. Kalimat B benar karena pola double comparative 'the + comparative, the + comparative' diterapkan dengan konsisten ('the sooner... the better'). Kalimat D benar karena adjective pendek 'light' memakai '-er' menjadi 'lighter' lalu diikuti 'than', sudah sesuai aturan. Kalimat E benar karena superlative 'the most dedicated' sudah tepat untuk adjective panjang, dengan 'by far' sebagai penegas yang wajar dipakai bersama superlative."
+  },
+  {
+    t: "Parallel Structure",
+    q: "The software engineering curriculum emphasizes algorithmic problem-solving, database management, and _____.",
+    o: [
+      "cloud architecture deployment",
+      "to deploy cloud architecture",
+      "deploying cloud architecture effectively",
+      "how to deploy cloud architecture",
+      "cloud architecture is deployed",
+    ],
+    c: 0,
+    e: "Dua unsur pertama adalah Noun Phrase ('algorithmic problem-solving', 'database management'). Maka unsur ketiga setelah konjungsi koordinatif 'and' juga wajib berupa Noun Phrase yang setara ('cloud architecture deployment'). Opsi B berupa to-infinitive phrase. Opsi C diawali gerund phrase. Opsi D berupa clause phrase 'how to'. Opsi E berupa klausa penuh (S+V). Hanya opsi A yang menjaga kesejajaran kelas kata noun phrase."
+  },
+  {
+    t: "Parallel Structure",
+    q: "In the event of a system crash, the administrator can either restart the physical server or _____.",
+    o: [
+      "reboot the virtual machine remotely",
+      "rebooting the virtual machine remotely",
+      "to reboot the virtual machine remotely",
+      "the virtual machine is rebooted remotely",
+      "remote reboot of the virtual machine",
+    ],
+    c: 0,
+    e: "Pola kalimat menggunakan modal 'can' diikuti paired conjunction 'either [V1] or [V1]': 'can either restart... or reboot...'. Unsur pertama adalah bare infinitive ('restart the physical server'), sehingga unsur kedua setelah 'or' wajib berupa bare infinitive yang setara ('reboot the virtual machine remotely'). Opsi B berbentuk gerund (-ing). Opsi C menambahkan 'to' yang tidak sejajar dengan 'restart' tanpa 'to'. Opsi D berupa klausa pasif. Opsi E berupa noun phrase."
+  },
+  {
+    t: "Parallel Structure",
+    q: "The newly designed user interface is visually stunning but _____.",
+    o: [
+      "remarkably difficult to navigate",
+      "navigate it is very difficult",
+      "with great difficulty in navigation",
+      "navigates with difficulty",
+      "difficulty of navigation is remarkable",
+    ],
+    c: 0,
+    e: "Konjungsi koordinatif 'but' menghubungkan dua adjective phrase pelengkap subjek (subject complement): 'is [adjective phrase] but [adjective phrase]'. Unsur pertama adalah 'visually stunning' (adverb + adjective). Unsur kedua yang sejajar adalah 'remarkably difficult to navigate' (adverb + adjective + infinitive modifier). Opsi B, D, dan E berupa klausa atau frasa verba yang memecah struktur paralel. Opsi C berupa frasa preposisi."
+  },
+  {
+    t: "Parallel Structure",
+    q: "The automated antivirus program not only detected the Trojan malware immediately but also _____.",
+    o: [
+      "quarantined the infected executable files",
+      "quarantining the infected executable files",
+      "it quarantined the infected executable files",
+      "to quarantine the infected executable files",
+      "quarantine of the infected executable files",
+    ],
+    c: 0,
+    e: "Pola 'not only [Verb Past]... but also [Verb Past]'. Unsur setelah 'not only' adalah past tense verb 'detected', maka unsur setelah 'but also' harus sejajar berupa past tense verb 'quarantined'. Opsi B (-ing), D (to-infinitive), dan E (noun phrase) tidak sejajar. Opsi C mengulang subjek 'it', padahal subjek 'The automated antivirus program' sudah mengontrol kedua verba."
+  },
+  {
+    t: "Parallel Structure",
+    q: "The new mobile application was designed to be both _____ and user-friendly.",
+    o: [
+      "highly responsive",
+      "with high responsiveness",
+      "responding highly",
+      "to respond quickly",
+      "responsiveness is high",
+    ],
+    c: 0,
+    e: "Struktur 'both [adjective] and [adjective]'. Unsur kedua setelah 'and' adalah adjective 'user-friendly', sehingga unsur setelah 'both' juga harus berupa adjective yang setara, yaitu 'highly responsive' (adverb + adjective). Opsi B adalah prepositional phrase. Opsi C adalah participle phrase. Opsi D adalah infinitive. Opsi E adalah klausa lengkap."
+  },
+  {
+    t: "Parallel Structure",
+    q: "During the unexpected blackout, neither the auxiliary generator nor _____ functioned as intended.",
+    o: [
+      "the backup battery system",
+      "backed up battery systems",
+      "to backup the battery system",
+      "did the backup battery system",
+      "backing up the battery system",
+    ],
+    c: 0,
+    e: "'Neither [Noun Phrase] nor [Noun Phrase]'. Unsur pertama adalah noun phrase 'the auxiliary generator', sehingga unsur kedua setelah 'nor' wajib berupa noun phrase yang setara, yaitu 'the backup battery system'. Opsi B, C, D, dan E bukan noun phrase yang setara dan merusak paralelisme subjek jamak gabungan tersebut."
+  },
+  {
+    t: "Parallel Structure",
+    q: "Pilih kalimat yang menempatkan paired conjunction 'not only... but also' secara PARALEL dan benar.",
+    o: [
+      "The lead developer not only wrote the backend logic but also designed the database schema.",
+      "The lead developer not only wrote the backend logic but also the database schema was designed.",
+      "The lead developer wrote not only the backend logic but also designed the database schema.",
+      "Not only the lead developer wrote the backend logic but also designed the database schema.",
+      "The lead developer not only wrote the backend logic but designed also the database schema.",
+    ],
+    c: 0,
+    e: "Aturan paired conjunction menuntut kedua bagian memiliki bentuk gramatikal yang persis setara di posisi yang sama. Pada opsi A, 'not only' diikuti Verba+Objek ('wrote the backend logic') dan 'but also' diikuti Verba+Objek ('designed the database schema') — paralel sempurna. Pada opsi B, unsur kedua berubah menjadi klausa pasif. Pada opsi C, 'not only' mendahului noun 'the backend logic' tetapi 'but also' mendahului verb 'designed'. Pada opsi D, peletakan di awal kalimat membutuhkan inversi dan klausa penuh. Pada opsi E, posisi 'also' salah susun."
+  },
+  {
+    t: "Parallel Structure",
+    q: "A successful data scientist excels at collecting raw data, cleaning noisy records, and _____.",
+    o: [
+      "building predictive machine learning models",
+      "to build predictive machine learning models",
+      "predictive machine learning model building",
+      "builds predictive machine learning models",
+      "how to build predictive machine learning models",
+    ],
+    c: 0,
+    e: "Preposisi 'at' diikuti oleh serangkaian gerund (-ing) yang sejajar: 'collecting raw data', 'cleaning noisy records', dan '[gerund]'. Maka unsur ketiga wajib berbentuk gerund: 'building predictive machine learning models'. Opsi B adalah to-infinitive. Opsi C adalah noun phrase. Opsi D adalah verba bentuk simple present. Opsi E adalah frasa tanya 'how to'."
+  },
+  {
+    t: "Parallel Structure",
+    q: "The cybersecurity auditor recommended that all employees use strong passwords, that two-factor authentication be enabled, and _____.",
+    o: [
+      "that sensitive company files be encrypted",
+      "sensitive company files must be encrypted",
+      "encrypting all sensitive company files",
+      "to encrypt sensitive company files",
+      "all sensitive company files are encrypted",
+    ],
+    c: 0,
+    e: "Tiga klausa objek yang mengikuti kata 'recommended' harus sejajar dalam pola subjunctive: 'that [S + V1]', 'that [S + V1]', and 'that [S + V1]'. Opsi A ('that sensitive company files be encrypted') mempertahankan pola 'that + clause' yang konsisten. Opsi B menghilangkan 'that' dan mengubah modal. Opsi C menggunakan gerund. Opsi D menggunakan infinitive. Opsi E menghilangkan 'that' dan melanggar pola subjunctive."
+  },
+  {
+    t: "Parallel Structure",
+    q: "According to experienced programmers, writing thorough unit tests is just as critical as _____.",
+    o: [
+      "writing clean production code",
+      "to write clean production code",
+      "clean production code is written",
+      "you write clean production code",
+      "write clean production code",
+    ],
+    c: 0,
+    e: "Dalam struktur perbandingan 'as [adjective] as', kedua hal yang dibandingkan harus berbentuk sejajar (equal grammatical forms). Hal yang dibandingkan di sisi kiri adalah gerund phrase 'writing thorough unit tests', sehingga di sisi kanan perbandingan juga wajib berupa gerund phrase: 'writing clean production code'. Opsi B (infinitive), C (klausa pasif), D (klausa penuh), dan E (base verb) tidak sejajar dengan gerund di sisi kiri."
+  },
+  {
+    t: "Parallel Structure",
+    q: "Many senior software architects prefer building modular microservices to _____ massive monolithic applications.",
+    o: [
+      "maintaining",
+      "maintain",
+      "maintenance of",
+      "to maintain",
+      "maintained",
+    ],
+    c: 0,
+    e: "Pola idiomatis perbandingan 'prefer [X] to [Y]': kata 'to' di sini adalah preposisi, dan kedua unsur X dan Y harus berbentuk sejajar, biasanya berupa Gerund (V-ing): 'prefer building... to maintaining...'. Opsi B ('maintain') adalah verba dasar. Opsi C ('maintenance of') adalah noun phrase. Opsi D ('to maintain') salah karena preposisi 'to' tidak boleh diikuti to-infinitive. Opsi E ('maintained') adalah past tense."
+  },
+  {
+    t: "Parallel Structure",
+    q: "Manakah kalimat berikut yang MELANGGAR aturan parallel structure?",
+    o: [
+      "The internship program gave students opportunities to network with industry leaders, learn cutting-edge tools, and working on real projects.",
+      "The internship program gave students opportunities to network with industry leaders, learn cutting-edge tools, and work on real projects.",
+      "The new software is reliable, fast, and secure.",
+      "You can submit your assignment either via email or through the online portal.",
+      "She likes neither reading dense manuals nor watching lengthy video tutorials.",
+    ],
+    c: 0,
+    e: "Kalimat A melanggar paralelisme karena dua unsur pertama berbentuk bare infinitive setelah 'to': 'network with industry leaders' dan 'learn cutting-edge tools', tetapi unsur ketiga tiba-tiba berubah menjadi gerund 'working on real projects'. Seharusnya sejajar: 'and work on real projects' (seperti yang benar pada opsi B). Opsi C (tiga adjective), D (dua prepositional phrase), dan E (dua gerund phrase) semuanya paralel dan benar."
+  },
+  {
+    t: "Comparative",
+    q: "The newly designed lightweight laptop is significantly _____ than the previous generation model.",
+    o: [
+      "thinner",
+      "more thin",
+      "more thinner",
+      "thinnest",
+      "as thin",
+    ],
+    c: 0,
+    e: "Kata sifat 'thin' adalah adjective pendek satu suku kata (dengan pola satu vokal + satu konsonan, huruf terakhir digandakan menjadi 'thinner'). Pola comparative untuk adjective pendek adalah 'adjective-er + than'. Opsi B ('more thin') tidak baku untuk satu suku kata. Opsi C ('more thinner') adalah kesalahan fatal double comparative. Opsi D ('thinnest') adalah bentuk superlative. Opsi E ('as thin') membutuhkan pasangan 'as', bukan 'than'."
+  },
+  {
+    t: "Comparative",
+    q: "Migrating the legacy system to a multi-cloud infrastructure proved to be _____ than the engineering team had originally anticipated.",
+    o: [
+      "more complicated",
+      "complicateder",
+      "most complicated",
+      "more complicateder",
+      "as complicated",
+    ],
+    c: 0,
+    e: "Kata sifat 'complicated' memiliki empat suku kata (polysyllabic / long adjective). Untuk kata sifat panjang (dua suku kata atau lebih yang tidak berakhiran -y), bentuk comparative yang benar adalah 'more + adjective + than', menghasilkan 'more complicated than'. Opsi B ('complicateder') tidak ada dalam bahasa Inggris. Opsi C adalah superlative. Opsi D adalah double comparative. Opsi E membutuhkan 'as...as'."
+  },
+  {
+    t: "Comparative",
+    q: "After applying the database indexing optimization, the server query execution time was far _____ than before.",
+    o: [
+      "better",
+      "more good",
+      "gooder",
+      "best",
+      "more better",
+    ],
+    c: 0,
+    e: "Bentuk comparative dari kata sifat ireguler 'good' adalah 'better' (bukan 'more good' atau 'gooder'). Kata 'far' di depan 'better' berfungsi sebagai modifier penegas derajat perbandingan ('jauh lebih baik'). Opsi B dan C bukan bentuk comparative baku dari 'good'. Opsi D adalah bentuk superlative. Opsi E adalah kesalahan double comparative ('more better')."
+  },
+  {
+    t: "Comparative",
+    q: "The multi-threaded background process executes data transformation tasks _____ than the single-threaded script.",
+    o: [
+      "more efficiently",
+      "efficientlier",
+      "most efficiently",
+      "more efficient",
+      "as efficiently",
+    ],
+    c: 0,
+    e: "Kata yang diterangkan adalah verba 'executes', sehingga yang dibutuhkan adalah comparative ADVERB (kata keterangan), bukan adjective. Adverb berakhiran -ly seperti 'efficiently' membentuk comparative dengan 'more + adverb', menghasilkan 'more efficiently than'. Opsi B ('efficientlier') tidak ada dalam bahasa Inggris. Opsi C adalah superlative. Opsi D ('more efficient') adalah adjective, bukan adverb untuk menerangkan kata kerja 'executes'. Opsi E membutuhkan pasangan 'as...as'."
+  },
+  {
+    t: "Comparative",
+    q: "Between the two cloud providers evaluated in the benchmark report, Amazon Web Services was found to be _____ for enterprise scalability.",
+    o: [
+      "the more reliable",
+      "the most reliable",
+      "more reliable than",
+      "most reliable",
+      "reliable",
+    ],
+    c: 0,
+    e: "Aturan khusus comparative: ketika membandingkan persis DUA hal ('Between the two... / Of the two...'), gunakan bentuk comparative yang didahului definite article 'the', yaitu 'the more [adjective]' (BUKAN superlative). Superlative hanya dipakai untuk TIGA hal atau lebih. Maka 'the more reliable' adalah pilihan yang tepat secara tata bahasa baku. Opsi B ('the most reliable') salah karena perbandingannya hanya antara dua pihak. Opsi C ('more reliable than') salah karena kalimat tidak memerlukan 'than' dalam struktur 'Between the two..., X is the...'. "
+  },
+  {
+    t: "Comparative",
+    q: "The enterprise license is _____ more expensive than the individual student plan, but it includes twenty-four-hour dedicated technical support.",
+    o: [
+      "significantly",
+      "very",
+      "too",
+      "so",
+      "more",
+    ],
+    c: 0,
+    e: "Untuk menegaskan atau mengubah derajat perbandingan pada bentuk comparative ('more expensive than'), gunakan degree modifiers seperti: 'much', 'far', 'significantly', 'substantially', atau 'slightly'. Kata 'very', 'too', dan 'so' TIDAK BOLEH memodifikasi bentuk comparative secara langsung ('very more expensive' adalah salah). Opsi E ('more more') jelas merupakan pengulangan keliru."
+  },
+  {
+    t: "Comparative",
+    q: "The open-source text editor is just _____ the proprietary commercial software for day-to-day programming tasks.",
+    o: [
+      "as capable as",
+      "as capable than",
+      "more capable as",
+      "capable as",
+      "so capable than",
+    ],
+    c: 0,
+    e: "Pola perbandingan kesetaraan (equal comparison) adalah 'as + adjective/adverb dasar + as'. Opsi A ('as capable as') mengikuti pola baku ini dengan tepat. Opsi B ('as capable than') dan E ('so capable than') salah karena mencampur 'as/so' dengan kata sambung 'than'. Opsi C mencampur 'more' dengan 'as'. Opsi D kehilangan kata 'as' pertama."
+  },
+  {
+    t: "Comparative",
+    q: "Our development team encountered _____ security exception _____ the QA team reported during the staging test.",
+    o: [
+      "the same / as",
+      "the same / than",
+      "similar / than",
+      "same / as",
+      "the similar / like",
+    ],
+    c: 0,
+    e: "Frasa perbandingan kesamaan identik adalah 'the same + noun + as'. Wajib menggunakan artikel 'the' sebelum 'same' dan kata sambung 'as' setelahnya. Opsi B salah karena memasangkan 'the same' dengan 'than'. Opsi C salah karena 'similar' dipasangkan dengan 'to', bukan 'than'. Opsi D salah karena menghilangkan artikel 'the'. Opsi E tidak gramatikal."
+  },
+  {
+    t: "Comparative",
+    q: "The battery life of the new ultrabook is considerably longer than _____ of the previous model.",
+    o: [
+      "that",
+      "those",
+      "this",
+      "these",
+      "what",
+    ],
+    c: 0,
+    e: "Ini adalah aturan 'Logical Comparison' dalam TOEFL: yang dibandingkan adalah 'The battery life' (daya tahan baterai - singular), BUKAN laptopnya langsung. Untuk menghindari perbandingan tidak logis dan pengulangan kata 'the battery life', gunakan pronoun pengganti singular 'that of'. Opsi B ('those') hanya untuk noun jamak. Opsi C, D, dan E tidak digunakan dalam pola komparasi logis 'that of / those of'."
+  },
+  {
+    t: "Comparative",
+    q: "The security protocols implemented at international financial institutions are far more stringent than _____ at local credit unions.",
+    o: [
+      "those",
+      "that",
+      "these",
+      "this",
+      "them",
+    ],
+    c: 0,
+    e: "Subjek yang dibandingkan adalah 'The security protocols' yang berbentuk JAMAK (plural). Pronoun pengganti untuk perbandingan logis kata benda jamak adalah 'those' ('those at local credit unions' = the security protocols at local credit unions). 'That' hanya untuk kata benda tunggal. 'These', 'this', dan 'them' tidak sesuai aturan baku komparasi paralel."
+  },
+  {
+    t: "Superlative",
+    q: "Of all the sorting algorithms covered in the data structures lecture, bubble sort is generally _____ in real-world applications.",
+    o: [
+      "the slowest",
+      "slowest",
+      "the slower",
+      "slower than",
+      "most slow",
+    ],
+    c: 0,
+    e: "Frasa pembuka 'Of all the sorting algorithms...' menandakan perbandingan di antara BANYAK hal (tiga atau lebih), sehingga membutuhkan bentuk SUPERLATIVE. 'Slow' adalah adjective pendek satu suku kata, sehingga superlative-nya adalah 'the + slow + -est' = 'the slowest'. Opsi B salah karena kehilangan artikel 'the'. Opsi C dan D adalah bentuk comparative. Opsi E salah bentuk (tidak menggunakan 'most' untuk satu suku kata)."
+  },
+  {
+    t: "Superlative",
+    q: "Preventing unauthorized database access is _____ priority of the network security infrastructure team.",
+    o: [
+      "the most critical",
+      "most critical",
+      "more critical",
+      "the more critical",
+      "the criticalest",
+    ],
+    c: 0,
+    e: "'Critical' adalah kata sifat panjang (tiga suku kata). Superlative dari kata sifat panjang dibentuk dengan 'the most + adjective', menghasilkan 'the most critical'. Opsi B salah karena tidak memakai 'the'. Opsi C dan D adalah comparative. Opsi E salah pembentukan kata."
+  },
+  {
+    t: "Superlative",
+    q: "Dr. Emily is widely regarded as the most talented artificial intelligence researcher _____ the entire university faculty.",
+    o: [
+      "in",
+      "of",
+      "between",
+      "than",
+      "from",
+    ],
+    c: 0,
+    e: "Aturan preposisi setelah superlative: gunakan 'in' untuk lokasi tunggal atau kelompok/satuan kolektif ('in the university', 'in the world', 'in the department', 'in the faculty'). Gunakan 'of' jika diikuti oleh daftar jamak anggota ('of all the researchers', 'of the five candidates'). Karena 'the entire university faculty' adalah satu unit/organisasi kolektif tunggal, preposisi yang tepat adalah 'in'."
+  },
+  {
+    t: "Superlative",
+    q: "The catastrophic server breach last Friday was _____ security incident the company has faced in over a decade.",
+    o: [
+      "the worst",
+      "the baddest",
+      "the worse",
+      "most bad",
+      "worst",
+    ],
+    c: 0,
+    e: "Bentuk superlative dari kata sifat ireguler 'bad' adalah 'the worst' (bad -> worse -> the worst). Opsi B ('the baddest') dan D ('most bad') bukan bentuk baku dalam bahasa Inggris standar. Opsi C ('the worse') adalah comparative. Opsi E ('worst') kehilangan artikel 'the'."
+  },
+  {
+    t: "Double Comparative",
+    q: "_____ the neural network model is trained on diverse data, _____ its real-world generalization will be.",
+    o: [
+      "The more thoroughly / the better",
+      "The more thoroughly / better",
+      "More thoroughly / the better",
+      "The most thoroughly / the best",
+      "As thoroughly / as good",
+    ],
+    c: 0,
+    e: "Pola double comparative ('The + comparative..., the + comparative...'). Kedua klausa WAJIB diawali oleh artikel 'The' diikuti bentuk comparative yang bersesuaian: 'The more thoroughly' (comparative adverb) berpasangan dengan 'the better' (comparative adjective dari 'good'). Opsi B dan C salah karena menghilangkan 'The' pada salah satu sisi. Opsi D menggunakan bentuk superlative ('The most / the best') yang keliru. Opsi E menggunakan pola kesetaraan 'as...as' yang tidak sesuai dengan struktur double comparative."
+  },
+  {
+    t: "Double Comparative",
+    q: "_____ the dataset is, _____ time the algorithm requires to execute the calculations.",
+    o: [
+      "The larger / the more",
+      "Larger / more",
+      "The largest / the most",
+      "The larger / more",
+      "Larger / the more",
+    ],
+    c: 0,
+    e: "Sisi pertama membandingkan ukuran dataset ('large' -> comparative 'larger' dengan 'The' di depannya: 'The larger'). Sisi kedua membandingkan waktu yang dibutuhkan ('time' -> comparative 'more time' dengan 'The' di depannya: 'the more time'). Keduanya wajib memiliki 'The' di awal. Opsi B, D, dan E melanggar aturan keberadaan 'The' di kedua sisi. Opsi C menggunakan bentuk superlative."
+  },
+  {
+    t: "Double Comparative",
+    q: "_____ you become with Linux terminal commands, _____ efficient your programming workflow will be.",
+    o: [
+      "The more familiar / the more",
+      "The more familiar / the most",
+      "More familiar / more",
+      "The most familiar / the most",
+      "The familiar / the efficient",
+    ],
+    c: 0,
+    e: "Kedua sisi menggunakan kata sifat panjang ('familiar' dan 'efficient') yang comparative-nya memakai 'more'. Pola lengkap: 'The more familiar... the more efficient...'. Opsi B mencampur comparative dan superlative. Opsi C menghilangkan 'The'. Opsi D memakai superlative di kedua sisi. Opsi E tidak memakai penanda comparative 'more'."
+  },
+  {
+    t: "Double Comparative",
+    q: "Pilih kalimat double comparative yang strukturnya SALAH.",
+    o: [
+      "The higher you climb the server rack ladder, cooler the ambient air feels.",
+      "The higher you climb the server rack ladder, the cooler the ambient air feels.",
+      "The harder you work on the assignment, the better your final grade will be.",
+      "The more complex the code is, the more difficult it becomes to debug.",
+      "The sooner we deploy the update, the faster users will receive the bug fixes.",
+    ],
+    c: 0,
+    e: "Kalimat A salah karena pada klausa kedua kehilangan artikel 'the' sebelum kata comparative 'cooler' ('cooler the ambient air feels' seharusnya 'the cooler the ambient air feels'). Pola double comparative menuntut 'The + comparative' secara simetris di KEDUA klausa. Opsi B, C, D, dan E semuanya menerapkan pola 'The + comparative..., the + comparative...' dengan sempurna."
+  },
+  {
+    t: "Parallel Structure",
+    q: "Either the system administrator must update the SSL certificate before midnight, _____ the web server will display a security warning to all visitors.",
+    o: [
+      "or",
+      "nor",
+      "and",
+      "but also",
+      "otherwise",
+    ],
+    c: 0,
+    e: "Pasangan baku correlative conjunction untuk 'either' adalah 'or' (either... or). 'Nor' adalah pasangan dari 'neither'. 'But also' adalah pasangan dari 'not only'. 'And' adalah pasangan dari 'both'. 'Otherwise' adalah conjunctive adverb, bukan correlative conjunction yang berpasangan dengan 'either'."
+  },
+  {
+    t: "Parallel Structure",
+    q: "Neither the principal software architect nor the project managers _____ convinced that the launch deadline is realistic.",
+    o: [
+      "are",
+      "is",
+      "was",
+      "being",
+      "has been",
+    ],
+    c: 0,
+    e: "Aturan kesesuaian subjek-verba (Subject-Verb Agreement) dengan 'neither... nor' dan 'either... or': verba harus menyesuaikan dengan subjek yang PALING DEKAT dengan verba tersebut (proximity rule). Subjek yang paling dekat dengan rumpang adalah 'the project managers' yang berbentuk JAMAK (plural). Oleh karena itu, verba yang tepat dalam konteks present tense adalah 'are'. Opsi B ('is') dan C ('was') berbentuk tunggal. Opsi D ('being') bukan finite verb."
+  },
+  {
+    t: "Parallel Structure",
+    q: "The automated script checks whether the network connection is stable _____ the transmission speed meets the minimum requirements.",
+    o: [
+      "or whether",
+      "and whether",
+      "but if",
+      "or if that",
+      "nor whether",
+    ],
+    c: 0,
+    e: "Pola correlative 'whether [X] or [Y]'. Karena unsur X adalah klausa penuh diawali 'whether' ('whether the network connection is stable'), maka unsur Y yang paling paralel adalah 'or whether the transmission speed meets...'. Opsi B ('and whether') salah pasangan (pasangan baku 'whether' adalah 'or'). Opsi C, D, dan E merusak struktur paralel dan tidak gramatikal."
+  },
+  {
+    t: "Superlative",
+    q: "Cybersecurity awareness training is considered one of the _____ investments an IT organization can make.",
+    o: [
+      "most effective",
+      "more effective",
+      "effective",
+      "effectivest",
+      "mostly effective",
+    ],
+    c: 0,
+    e: "Frasa 'one of the' WAJIB diikuti oleh bentuk SUPERLATIVE ('the most + adjective' atau 'the + adjective-est') dan kata benda jamak (plural noun: 'investments'). 'Effective' adalah kata sifat panjang, sehingga bentuk superlative-nya adalah 'most effective' (setelah kata 'the'). Opsi B ('more effective') adalah comparative. Opsi C adalah positive degree biasa. Opsi D tidak baku. Opsi E salah kelas kata."
+  },
+  {
+    t: "Comparative",
+    q: "There is _____ way to master computer programming than by writing real code every single day.",
+    o: [
+      "no better",
+      "not good",
+      "no best",
+      "none better",
+      "not better",
+    ],
+    c: 0,
+    e: "Kalimat ini membandingkan cara belajar dengan kata sambung 'than', sehingga membutuhkan bentuk comparative ('better'). Bentuk negasi yang benar sebelum kata benda 'way' adalah determiner 'no' + comparative adjective 'better', menghasilkan frasa 'There is no better way... than...'. Opsi B dan C salah bentuk. Opsi D ('none') adalah pronoun dan tidak bisa langsung memodifikasi noun 'way'. Opsi E ('not better') secara gramatikal membutuhkan artikel 'not a better way'."
+  },
+  {
+    t: "Parallel Structure",
+    q: "The database design must be robust, scalable, and _____ to support millions of concurrent users.",
+    o: [
+      "resilient",
+      "resilience",
+      "with resilience",
+      "in a resilient manner",
+      "having resilience",
+    ],
+    c: 0,
+    e: "Tiga unsur pelengkap (subject complements) setelah modal 'must be' harus sejajar dalam kelas kata ADJECTIVE: 'robust' (adj), 'scalable' (adj), and '[adjective]'. Kata sifat yang tepat adalah 'resilient'. Opsi B ('resilience') adalah kata benda (noun). Opsi C ('with resilience') dan D ('in a resilient manner') adalah frasa preposisi/adverbial. Opsi E adalah participial phrase."
+  },
+  {
+    t: "Parallel Structure",
+    q: "Deploying applications using Docker containers is significantly faster than _____ virtual machines from scratch.",
+    o: [
+      "provisioning",
+      "provision",
+      "to provision",
+      "provisioning of",
+      "provisions",
+    ],
+    c: 0,
+    e: "Unsur di sebelah kiri perbandingan adalah gerund phrase: 'Deploying applications...'. Oleh karena itu, unsur di sebelah kanan kata sambung 'than' harus sejajar dalam bentuk gerund phrase juga: 'provisioning virtual machines...'. Opsi B adalah base verb. Opsi C adalah to-infinitive. Opsi D menambahkan preposisi 'of' yang tidak tepat sebelum direct object. Opsi E adalah verba orang ketiga tunggal."
+  },
+  {
+    t: "Superlative",
+    q: "This is by far _____ complex cryptographic algorithm that the security research institute has ever evaluated.",
+    o: [
+      "the most",
+      "most",
+      "more",
+      "the more",
+      "as",
+    ],
+    c: 0,
+    e: "Keterangan 'by far' dan klausa perfect 'has ever evaluated' merupakan penanda kuat bentuk SUPERLATIVE ('paling rumit yang pernah dievaluasi'). Karena kata sifatnya adalah 'complex' (panjang), bentuk yang benar adalah 'the most complex'. Opsi B salah karena kehilangan artikel 'the'. Opsi C dan D adalah comparative. Opsi E adalah perbandingan kesetaraan."
+  },
+  {
+    t: "Parallel & Comparative",
+    q: "Pilih kalimat yang menerapkan kaidah parallel structure DAN perbandingan dengan BENAR.",
+    o: [
+      "Traveling by train is both faster than taking the bus and more relaxing than driving a car.",
+      "Traveling by train is both faster than taking the bus and more relax than driving a car.",
+      "Traveling by train is both more fast than taking the bus and more relaxing than driving a car.",
+      "Traveling by train is both faster then taking the bus and more relaxing then driving a car.",
+      "Traveling by train is both fast than taking the bus and relaxing than driving a car.",
+    ],
+    c: 0,
+    e: "Kalimat A menggabungkan paired conjunction 'both [X] and [Y]' dengan struktur perbandingan yang sejajar di kedua sisi: [comparative 1 + than + gerund] dan [comparative 2 + than + gerund]: 'faster than taking...' dan 'more relaxing than driving...'. Opsi B salah karena 'more relax' tidak gramatikal ('relaxing' adalah adjective yang benar). Opsi C salah karena 'fast' membentuk 'faster', bukan 'more fast'. Opsi D salah karena menggunakan 'then' alih-alih kata sambung perbandingan 'than'. Opsi E salah karena menghilangkan penanda comparative '-er' dan 'more'."
+  },
+  {
+    t: "Parallel & Comparative",
+    q: "Pilih kalimat yang memiliki kesalahan gramatikal pada comparative, superlative, atau parallel structure.",
+    o: [
+      "The lead software engineer prefers designing microservice architectures than maintaining monolithic codebases.",
+      "The lead software engineer prefers designing microservice architectures to maintaining monolithic codebases.",
+      "The new laptop is lighter, more powerful, and significantly more expensive than my old one.",
+      "The harder you study the networking protocols, the more easily you will pass the certification exam.",
+      "Of the three algorithms tested, Dijkstra's algorithm proved to be the most efficient.",
+    ],
+    c: 0,
+    e: "Kalimat A salah karena kata kerja 'prefer' secara idiomatis dan gramatikal berpasangan dengan preposisi 'to' ('prefer X to Y'), BUKAN dengan 'than'. Bentuk yang benar adalah 'prefers designing... to maintaining...' seperti yang dicontohkan pada opsi B. Opsi C benar karena tiga comparative sejajar ('lighter', 'more powerful', 'more expensive'). Opsi D benar dalam struktur double comparative ('The harder... the more easily...'). Opsi E benar dalam struktur superlative untuk tiga hal ('Of the three... the most efficient')."
+  },
+];
+
+/* Gabungkan judul part */
+const PART_INFO = {1:{name:"Part 1 — Clauses & Reduced Clauses"},2:{name:"Part 2 — Parallel & Comparative"}};
+
+/* ================= ENGINE ================= */
+let state = { part:1, questions:[], index:0, answers:[] };
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function buildQuestions(part){
+  const bank = part===1?BANK1:BANK2;
+  const shuffledBank = shuffle(bank);
+  return shuffledBank.map(item=>{
+    const letters = ["A","B","C","D","E"];
+    const optPairs = item.o.map((text,i)=>({text, isCorrect:i===item.c}));
+    const shuffledOpts = shuffle(optPairs);
+    const correctIndex = shuffledOpts.findIndex(o=>o.isCorrect);
+    return {t:item.t, q:item.q, e:item.e, options:shuffledOpts.map(o=>o.text), correct:correctIndex};
+  });
+}
+
+function startQuiz(part){
+  state.part = part;
+  state.questions = buildQuestions(part);
+  state.index = 0;
+  state.answers = new Array(state.questions.length).fill(null);
+  document.getElementById('screenStart').classList.add('hidden');
+  document.getElementById('screenResult').classList.add('hidden');
+  document.getElementById('screenQuiz').classList.remove('hidden');
+  document.getElementById('statusPill').textContent = PART_INFO[part].name;
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const qs = state.questions;
+  const i = state.index;
+  const item = qs[i];
+  const total = qs.length;
+
+  document.getElementById('progressLabel').textContent = `Soal ${i+1} / ${total}`;
+  document.getElementById('progressFill').style.width = `${((i+1)/total)*100}%`;
+  document.getElementById('qTag').textContent = item.t;
+  document.getElementById('qText').textContent = `${i+1}. ${item.q}`;
+
+  const letters = ["A","B","C","D","E"];
+  const wrap = document.getElementById('optionsWrap');
+  wrap.innerHTML = "";
+  const userAns = state.answers[i];
+
+  item.options.forEach((opt,idx)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="letter">${letters[idx]}</span><span>${opt}</span>`;
+    if(userAns!==null){
+      btn.classList.add('locked');
+      if(idx===item.correct) btn.classList.add('correct');
+      else if(idx===userAns) btn.classList.add('wrong');
+      else btn.classList.add('dim');
+    } else {
+      btn.onclick = ()=>selectAnswer(idx);
+    }
+    wrap.appendChild(btn);
+  });
+
+  const explainBox = document.getElementById('explainBox');
+  if(userAns!==null){
+    const correct = userAns===item.correct;
+    explainBox.className = `explain show ${correct?'ok':'bad'}`;
+    explainBox.innerHTML = `<b>${correct? '✅ Benar!' : '❌ Kurang tepat.'}</b><br>${item.e}`;
+  } else {
+    explainBox.className = 'explain';
+    explainBox.innerHTML = '';
+  }
+
+  document.getElementById('btnPrev').disabled = i===0;
+  const nextBtn = document.getElementById('btnNext');
+  if(i===total-1){
+    nextBtn.textContent = 'Selesai & Lihat Hasil →';
+    nextBtn.className = 'btn btn-finish';
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.className = 'btn btn-next';
+  }
+}
+
+function selectAnswer(idx){
+  state.answers[state.index] = idx;
+  renderQuestion();
+}
+
+function goPrev(){
+  if(state.index>0){ state.index--; renderQuestion(); }
+}
+function goNext(){
+  if(state.index < state.questions.length-1){
+    state.index++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function openModal(){
+  const grid = document.getElementById('numGrid');
+  grid.innerHTML = "";
+  state.questions.forEach((item,idx)=>{
+    const b = document.createElement('button');
+    b.className = 'num-btn';
+    b.textContent = idx+1;
+    const ans = state.answers[idx];
+    if(idx===state.index) b.classList.add('cur');
+    if(ans!==null){
+      b.classList.add(ans===item.correct?'ans-ok':'ans-bad');
+    }
+    b.onclick = ()=>{ state.index=idx; closeModal(); renderQuestion(); };
+    grid.appendChild(b);
+  });
+  document.getElementById('modalBg').classList.add('show');
+}
+function closeModal(){ document.getElementById('modalBg').classList.remove('show'); }
+
+function showResult(){
+  document.getElementById('screenQuiz').classList.add('hidden');
+  const qs = state.questions;
+  let correctCount = 0;
+  const wrongList = [];
+  qs.forEach((item,idx)=>{
+    const ans = state.answers[idx];
+    if(ans===item.correct) correctCount++;
+    else wrongList.push({item, idx, ans});
+  });
+  const total = qs.length;
+  const unanswered = state.answers.filter(a=>a===null).length;
+  const score = Math.round((correctCount/total)*100);
+  const letters = ["A","B","C","D","E"];
+
+  let html = `
+  <div class="score-card">
+    <div class="score-ring" style="--pct:${score}">
+      <div class="inner"><b>${score}</b><span>dari 100</span></div>
+    </div>
+    <h2>${score>=70?'Mantap! 🎉':'Terus berlatih ya 💪'}</h2>
+    <p style="color:var(--text-soft)">${PART_INFO[state.part].name}</p>
+    <div class="score-stats">
+      <div class="stat"><b style="color:var(--correct)">${correctCount}</b><span>Benar</span></div>
+      <div class="stat"><b style="color:var(--wrong)">${total-correctCount-unanswered}</b><span>Salah</span></div>
+      <div class="stat"><b style="color:var(--text-soft)">${unanswered}</b><span>Kosong</span></div>
+    </div>
+    <div class="restart-row">
+      <button class="btn btn-prev" onclick="backToStart()">⟵ Pilih Part Lain</button>
+      <button class="btn btn-next" onclick="startQuiz(${state.part})">🔄 Ulangi Kuis</button>
+    </div>
+  </div>`;
+
+  if(wrongList.length>0){
+    html += `<div class="review"><h3>Pembahasan Soal yang Salah/Kosong</h3>`;
+    wrongList.forEach(w=>{
+      const yourAnsText = w.ans!==null? `${letters[w.ans]}. ${w.item.options[w.ans]}` : '(tidak dijawab)';
+      html += `
+      <div class="review-item">
+        <div class="qn">No. ${w.idx+1} — ${w.item.q}</div>
+        <div class="ans-line bad">Jawabanmu: ${yourAnsText}</div>
+        <div class="ans-line ok">Jawaban benar: ${letters[w.item.correct]}. ${w.item.options[w.item.correct]}</div>
+        <div class="ex">${w.item.e}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  } else {
+    html += `<div class="review"><p style="text-align:center;color:var(--text-soft)">Semua jawaban benar! 🎉</p></div>`;
+  }
+
+  document.getElementById('screenResult').innerHTML = html;
+  document.getElementById('screenResult').classList.remove('hidden');
+}
+
+function backToStart(){
+  document.getElementById('screenResult').classList.add('hidden');
+  document.getElementById('screenStart').classList.remove('hidden');
+  document.getElementById('statusPill').textContent = "Structure & Written Expression";
+}
+
+document.addEventListener('keydown',(e)=>{
+  if(document.getElementById('screenQuiz').classList.contains('hidden')) return;
+  if(e.key==='ArrowRight') goNext();
+  if(e.key==='ArrowLeft') goPrev();
+});
+</script>
+</body>
+</html>
