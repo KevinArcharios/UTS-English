@@ -1563,13 +1563,13 @@ function shuffle(arr){
 function buildQuestions(part){
   const bank = part===1?BANK1:BANK2;
   const shuffledBank = shuffle(bank);
-  return shuffledBank.map(item=>{
-    const letters = ["A","B","C","D","E"];
-    const optPairs = item.o.map((text,i)=>({text, isCorrect:i===item.c}));
-    const shuffledOpts = shuffle(optPairs);
-    const correctIndex = shuffledOpts.findIndex(o=>o.isCorrect);
-    return {t:item.t, q:item.q, e:item.e, options:shuffledOpts.map(o=>o.text), correct:correctIndex};
-  });
+  return shuffledBank.map(item=>({
+    t: item.t,
+    q: item.q,
+    e: item.e,
+    options: item.o.slice(),
+    correct: item.c
+  }));
 }
 
 function startQuiz(part){
